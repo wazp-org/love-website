@@ -1,0 +1,76 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  color: #f3e9f6;
+  background:
+    radial-gradient(1200px 700px at 15% 10%, #5a1a6a 0%, transparent 55%),
+    radial-gradient(900px 600px at 90% 80%, #2a0b3d 0%, transparent 50%),
+    linear-gradient(165deg, #07040c 0%, #140818 40%, #2b0d2e 70%, #0a0610 100%);
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.glow-a {
+  width: 420px;
+  height: 420px;
+  background: #9b3db8;
+  top: -80px;
+  left: -40px;
+}
+
+.glow-b {
+  width: 380px;
+  height: 380px;
+  background: #4a1468;
+  bottom: -60px;
+  right: -30px;
+}
+
+main {
+  position: relative;
+  text-align: center;
+  padding: 32px 24px;
+  max-width: 640px;
+}
+
+.eyebrow {
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: #d4b3e4;
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-weight: 400;
+  font-size: clamp(3rem, 8vw, 5.2rem);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+.lede {
+  font-size: 1.15rem;
+  color: #e6d2ef;
+  margin-bottom: 28px;
+}
+
+.note {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: #b894c6;
+}
