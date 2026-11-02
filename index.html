@@ -316,6 +316,7 @@
   var m=location.hash.match(/^#shop-(\w+)/);
   setCat(m?m[1]:'all');
   if(m) document.getElementById('shop').scrollIntoView();
+  window.addEventListener('hashchange',function(){var h=location.hash.match(/^#shop-(\w+)/); if(h&&h[1]!==state.cat) setCat(h[1],true);});
 
   /* ---------- Enquiry form (opens the visitor's email app) ---------- */
   $('enquiry').addEventListener('submit',function(e){
