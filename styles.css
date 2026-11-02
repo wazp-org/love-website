@@ -295,3 +295,42 @@ footer .flinks a:hover{color:var(--gold-hi)}
   .arch{max-width:300px}
   .hero{padding:48px 0 64px}
 }
+
+/* ---------- eBay link in menu ---------- */
+nav.links a.nav-ebay{color:var(--gold-hi);border-bottom:1px solid var(--gold-line);padding-bottom:2px}
+
+/* ---------- Find us + QR ---------- */
+.find-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:stretch}
+@media (max-width:900px){.find-grid{grid-template-columns:1fr}}
+.find-grid .find-card{max-width:none;margin:0}
+.find-btn{margin-top:14px;padding:11px 20px;font-size:.62rem}
+.qr-card{
+  position:relative;text-align:center;padding:52px 28px 46px;
+  border:1px solid var(--gold-line);outline:1px solid var(--gold-faint);outline-offset:-10px;
+  background:
+    radial-gradient(70% 55% at 50% 52%,rgba(122,52,196,.38) 0%,transparent 70%),
+    linear-gradient(180deg,var(--night),var(--black));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+.qr-card h2{font-size:clamp(1.7rem,3.4vw,2.4rem);margin:12px 0 4px}
+.qr-card .tagline{font-size:1.2rem;color:var(--cream-soft);margin-bottom:26px}
+.qr-star{position:absolute;left:50%;width:18px;height:18px;margin-left:-9px;color:var(--gold)}
+.qr-star.top{top:-9px}.qr-star.bottom{bottom:-9px}
+.qr-frame{
+  position:relative;display:block;width:min(300px,78vw);padding:14px;
+  background:linear-gradient(145deg,#f6e2a6,#b98d3e 45%,#f0d690 70%,#9c7633);
+  box-shadow:0 0 0 1px rgba(0,0,0,.6),0 20px 50px -14px rgba(122,52,196,.65),0 0 40px rgba(216,180,106,.18);
+  transition:transform .2s;
+}
+.qr-frame:hover{transform:translateY(-3px)}
+.qr-frame > img:first-of-type{width:100%;height:auto;display:block}
+.qr-logo{
+  position:absolute;left:50%;top:50%;width:22%;height:auto;transform:translate(-50%,-50%);
+  border-radius:50%;background:#0d0812;padding:3px;box-shadow:0 0 0 3px #f6ecd6;
+}
+.qr-frame .corner{position:absolute;width:26px;height:26px;border:2px solid var(--gold-hi)}
+.qr-frame .tl{top:-8px;left:-8px;border-right:0;border-bottom:0}
+.qr-frame .tr{top:-8px;right:-8px;border-left:0;border-bottom:0}
+.qr-frame .bl{bottom:-8px;left:-8px;border-right:0;border-top:0}
+.qr-frame .br{bottom:-8px;right:-8px;border-left:0;border-top:0}
+.qr-handle{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--cream-soft)}
