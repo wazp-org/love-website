@@ -422,3 +422,23 @@ nav.links a{white-space:nowrap}
   .brand span{font-size:.72rem;letter-spacing:.1em}
   .brand small{display:none}
 }
+
+/* ---------- Category pages ---------- */
+.cat-hero{
+  padding:56px 0 40px;text-align:center;border-bottom:1px solid var(--gold-faint);
+  background:radial-gradient(60% 80% at 50% 0%,rgba(122,52,196,.38) 0%,transparent 70%),var(--black);
+}
+.cat-hero h1{font-size:clamp(2.2rem,6vw,4.2rem);margin:14px 0 4px}
+.crumbs{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:26px}
+.crumbs a{color:var(--cream-soft);text-decoration:none}.crumbs a:hover{color:var(--gold-hi)}
+.crumbs span{margin:0 8px;color:var(--gold)}
+.cat-intro{max-width:760px;margin:0 auto}
+.cat-intro p{color:var(--cream-soft);margin-bottom:10px}
+.cat-shop{padding-top:40px}
+.cat-h2{font-size:1.25rem;letter-spacing:.1em}
+.static-chips a.chip{text-decoration:none}
+.card[hidden]{display:none}
+.cat-links{margin-bottom:40px;padding-bottom:34px;border-bottom:1px solid var(--gold-faint)}
+.cat-links-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;margin-top:14px}
+.cat-links-row a{font-size:.74rem;letter-spacing:.12em;color:var(--cream-soft);text-decoration:none}
+.cat-links-row a:hover{color:var(--gold-hi)}
