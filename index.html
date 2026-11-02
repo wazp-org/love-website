@@ -41,14 +41,14 @@
       <span>LOVE AND BEAUTY<small>LIMITED</small></span>
     </a>
     <nav class="links" aria-label="Main">
-      <a href="#collections">Collections</a>
-      <a href="#shop">Shop</a>
+      <a class="nav-toys" href="#shop-sextoys" data-go="sextoys">Sex Toys</a>
+      <a href="#shop-all" data-go="all">Shop All</a>
       <a href="#story">Our Story</a>
       <a href="#find-us">Find Us</a>
       <a href="#contact">Contact</a>
       <a class="nav-ebay" href="https://ebay.io/m/vXRRmt" target="_blank" rel="noopener">eBay Shop</a>
     </nav>
-    <a class="btn" href="#shop">Shop now</a>
+    <a class="btn btn-gold" href="#shop-sextoys" data-go="sextoys">Shop Sex Toys</a>
   </div>
 </header>
 
@@ -61,15 +61,39 @@
       <p class="eyebrow">Welcome to</p>
       <h1 class="gold">LOVE AND BEAUTY</h1>
       <div class="limited">LIMITED</div>
-      <p class="tagline">Lingerie, beauty &amp; wellness, chosen with love.</p>
+      <p class="tagline">Sex toys, lingerie &amp; wellness, chosen with love.</p>
       <div class="hero-actions">
-        <a class="btn btn-gold" href="#shop">Browse the collection</a>
+        <a class="btn btn-gold" href="#shop-sextoys" data-go="sextoys">Shop Sex Toys</a>
         <a class="btn" href="https://ebay.io/m/vXRRmt" target="_blank" rel="noopener">Our eBay shop</a>
       </div>
-      <p class="hero-meta">Family-run<span>·</span>United Kingdom<span>·</span>18+</p>
+      <p class="hero-meta"><span class="tc" id="hero-count"></span> sex toys in stock<span>·</span>Discreet packaging<span>·</span>18+</p>
     </div>
     <div class="arch" aria-hidden="true">
       <div class="arch-inner"><img class="logo" src="images/logo.png" alt=""></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SEX TOYS (main category) ============ -->
+<section class="toys" id="sex-toys">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Our main collection</p>
+      <h2 class="title gold toys-title">SEX TOYS</h2>
+      <div class="star-rule"><svg><use href="#star"/></svg></div>
+      <p class="lede">Vibrators, realistic toys, anal play, cock rings and more, from LELO, Satisfyer, CalExotics, Rocks-Off and other trusted brands. Sent in plain, discreet packaging.</p>
+    </div>
+    <div class="toys-grid">
+      <a class="toy-feature" href="#shop-sextoys" data-go="sextoys">
+        <img src="images/sex-toys-feature.jpg" alt="Satin eye mask with a gold feather, padlock and key on black silk" loading="lazy">
+        <div class="toy-feature-body">
+          <span class="eyebrow">Shop everything</span>
+          <span class="toy-feature-title gold">ALL SEX TOYS</span>
+          <span class="toy-count" data-count="sextoys"></span>
+          <span class="btn btn-gold">Shop all sex toys</span>
+        </div>
+      </a>
+      <div class="toy-tiles" id="toy-tiles"></div>
     </div>
   </div>
 </section>
@@ -86,7 +110,7 @@
       <a class="post" href="#shop" data-go="lingerie"><img src="images/lingerie.jpg" alt="The Collection No. 01 — Lingerie: silk, lace and quiet confidence" loading="lazy"><span class="cta">Shop lingerie</span></a>
       <a class="post" href="#shop" data-go="beauty"><img src="images/beauty.jpg" alt="The Collection No. 02 — Beauty: little rituals, beautifully done" loading="lazy"><span class="cta">Shop beauty</span></a>
       <a class="post" href="#shop" data-go="lube"><img src="images/wellness.jpg" alt="The Collection No. 03 — Wellness: self-care, softly spoken" loading="lazy"><span class="cta">Shop wellness</span></a>
-      <a class="post" href="#shop" data-go="vibes"><img src="images/after-dark.jpg" alt="For After Dark — wellness for the adventurous, pleasure wrapped in discretion" loading="lazy"><span class="cta">Shop after dark</span></a>
+      <a class="post" href="#shop" data-go="sextoys"><img src="images/after-dark.jpg" alt="For After Dark — wellness for the adventurous, pleasure wrapped in discretion" loading="lazy"><span class="cta">Shop sex toys</span></a>
     </div>
   </div>
 </section>
@@ -98,10 +122,11 @@
       <p class="eyebrow">Shop with us</p>
       <h2 class="title gold">THE SHOP</h2>
       <div class="star-rule"><svg><use href="#star"/></svg></div>
-      <p class="lede">Browse everything we stock by category. When you find something you love, tap <em>Buy on eBay</em> to check out securely through our eBay shop.</p>
+      <p class="lede">Pick a category below. When you find something you love, tap <em>Buy on eBay</em> to check out securely through our eBay shop.</p>
     </div>
 
-    <div class="chips" id="chips" role="group" aria-label="Categories"></div>
+    <div class="groups" id="groups" role="group" aria-label="Main categories"></div>
+    <div class="chips" id="chips" role="group" aria-label="Sex toy types"></div>
 
     <div class="tools">
       <div>
@@ -229,7 +254,7 @@
     <div class="name gold">LOVE AND BEAUTY LIMITED</div>
     <div class="star-rule"><svg><use href="#star"/></svg></div>
     <div class="flinks">
-      <a href="#collections">Collections</a><a href="#shop">Shop</a><a href="#story">Our Story</a><a href="#find-us">Find Us</a><a href="#contact">Contact</a>
+      <a href="#shop-sextoys" data-go="sextoys">Sex Toys</a><a href="#collections">Collections</a><a href="#shop-all" data-go="all">Shop All</a><a href="#story">Our Story</a><a href="#find-us">Find Us</a><a href="#contact">Contact</a>
     </div>
     <p class="meta">Family-run · United Kingdom · Discreet, plain packaging · Adult products are sold to over-18s only.<br>© <span id="yr"></span> Love and Beauty Limited</p>
   </div>
@@ -247,49 +272,89 @@
   document.getElementById('yr').textContent=new Date().getFullYear();
 
   /* ---------- Shop ---------- */
-  var CATS=[
-    ['all','All products'],
-    ['vibes','Vibrators & Massagers'],
-    ['realistic','Realistic Toys & Dildos'],
-    ['anal','Anal Play'],
-    ['rings','Cock Rings & Enhancers'],
-    ['him','For Him'],
-    ['lube','Lubricants & Intimate Care'],
-    ['bondage','Bondage & Restraints'],
-    ['lingerie','Lingerie'],
-    ['clubwear','Fetishwear & Clubwear'],
-    ['menswear',"Men's Underwear & Harnesses"],
-    ['gifts','Gifts & Advent Calendars'],
-    ['beauty','Beauty']
+  var SUB={
+    vibes:'Vibrators & Massagers', realistic:'Realistic Toys & Dildos', anal:'Anal Play',
+    rings:'Cock Rings & Enhancers', him:'Toys for Him',
+    lingerie:'Lingerie', bondage:'Bondage & Restraints', clubwear:'Fetishwear & Clubwear',
+    menswear:"Men's Underwear & Harnesses", lube:'Lubricants & Intimate Care',
+    gifts:'Gifts & Advent Calendars', beauty:'Beauty'
+  };
+  /* main categories; Sex Toys is the big one */
+  var GROUPS=[
+    {k:'sextoys', n:'Sex Toys', subs:['vibes','realistic','anal','rings','him'], big:true},
+    {k:'lingerie', n:'Lingerie', subs:['lingerie']},
+    {k:'bondage', n:'Bondage & Restraints', subs:['bondage']},
+    {k:'wear', n:'Fetish & Clubwear', subs:['clubwear','menswear']},
+    {k:'lube', n:'Lubes & Intimate Care', subs:['lube']},
+    {k:'gifts', n:'Gifts & Calendars', subs:['gifts']},
+    {k:'beauty', n:'Beauty', subs:['beauty']},
+    {k:'all', n:'All Products', subs:null}
   ];
-  var NAME={}; CATS.forEach(function(c){NAME[c[0]]=c[1];});
-  /* 'Featured' order: take turns across categories so the first page shows a good mix */
-  var MIX=['vibes','lingerie','realistic','lube','anal','bondage','him','clubwear','rings','menswear','gifts','beauty'];
+  /* a product photo for each sex toy type box */
+  var TILE_IMG={vibes:'II8AAeSwVntq1397', realistic:'ywgAAeSwfORq4glI', anal:'6JkAAeSwElZq3-CT', rings:'yt0AAeSwhe5q3-CW', him:'EnoAAeSw-B5q4g-0'};
+  var G={}; GROUPS.forEach(function(g){G[g.k]=g;});
+  var SUBGROUP={}; GROUPS.forEach(function(g){(g.subs||[]).forEach(function(c){SUBGROUP[c]=g.k;});});
+
+  var MIX=['vibes','lingerie','vibes','realistic','lube','vibes','anal','bondage','vibes','him','clubwear','vibes','rings','menswear','gifts','beauty'];
   var buckets={}; (window.LB_PRODUCTS||[]).forEach(function(p){(buckets[p.c]=buckets[p.c]||[]).push(p);});
   var ALL=[], left=true;
   while(left){ left=false; MIX.forEach(function(c){ var b=buckets[c]; if(b&&b.length){ALL.push(b.shift()); left=true;} }); }
-  var PAGE=24, state={cat:'all',q:'',sort:'featured',shown:PAGE};
+
+  var PAGE=24, state={group:'sextoys',sub:null,q:'',sort:'featured',shown:PAGE};
   var $=function(id){return document.getElementById(id);};
   $('updated').textContent=window.LB_UPDATED||'';
 
-  var counts={all:ALL.length}; ALL.forEach(function(p){counts[p.c]=(counts[p.c]||0)+1;});
-  var chips=$('chips');
-  CATS.forEach(function(c){
-    if(!counts[c[0]]) return;
-    var b=document.createElement('button');
-    b.className='chip'; b.type='button'; b.dataset.cat=c[0];
-    b.innerHTML=c[1].replace(/&/g,'&amp;')+'<b>'+counts[c[0]]+'</b>';
-    b.addEventListener('click',function(){setCat(c[0]);});
-    chips.appendChild(b);
-  });
-
+  var counts={}; ALL.forEach(function(p){counts[p.c]=(counts[p.c]||0)+1;});
+  function gcount(g){ return g.subs ? g.subs.reduce(function(t,c){return t+(counts[c]||0);},0) : ALL.length; }
   function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
   function money(v){return '£'+v.toFixed(2);}
 
+  var toyTotal=gcount(G.sextoys);
+  $('hero-count').textContent=toyTotal;
+  document.querySelectorAll('[data-count="sextoys"]').forEach(function(e){e.textContent=toyTotal+' toys';});
+
+  /* big type boxes in the Sex Toys section */
+  var tiles=$('toy-tiles');
+  G.sextoys.subs.forEach(function(c){
+    if(!counts[c]) return;
+    var a=document.createElement('a');
+    a.className='toy-tile'; a.href='#shop-'+c; a.dataset.go=c;
+    a.innerHTML='<span class="toy-img"><img src="https://i.ebayimg.com/images/g/'+TILE_IMG[c]+'/s-l500.jpg" alt="" loading="lazy"></span>'+
+      '<span class="toy-text"><span class="toy-name">'+esc(SUB[c])+'</span><span class="toy-num">'+counts[c]+' products</span><span class="toy-go">Shop now ›</span></span>';
+    tiles.appendChild(a);
+  });
+
+  /* main category boxes in the shop */
+  var groupsEl=$('groups');
+  GROUPS.forEach(function(g){
+    var n=gcount(g); if(!n) return;
+    var b=document.createElement('button');
+    b.type='button'; b.className='group'+(g.big?' big':''); b.dataset.group=g.k;
+    b.innerHTML=(g.big?'<span class="g-eyebrow">Main category</span>':'')+'<span class="g-name">'+esc(g.n)+'</span><span class="g-num">'+n+' products</span>';
+    b.addEventListener('click',function(){go(g.k);});
+    groupsEl.appendChild(b);
+  });
+
+  var chips=$('chips');
+  function renderChips(){
+    var g=G[state.group]; chips.innerHTML='';
+    if(!g.subs||g.subs.length<2){chips.hidden=true;return;}
+    chips.hidden=false;
+    var items=[[null,'All '+g.n,gcount(g)]].concat(g.subs.filter(function(c){return counts[c];}).map(function(c){return [c,SUB[c],counts[c]];}));
+    items.forEach(function(it){
+      var b=document.createElement('button');
+      b.type='button'; b.className='chip'; b.setAttribute('aria-pressed',state.sub===it[0]);
+      b.innerHTML=esc(it[1])+'<b>'+it[2]+'</b>';
+      b.addEventListener('click',function(){state.sub=it[0];state.shown=PAGE;render();setHash();});
+      chips.appendChild(b);
+    });
+  }
+
   function list(){
-    var q=state.q.toLowerCase().trim();
+    var g=G[state.group], q=state.q.toLowerCase().trim();
     var r=ALL.filter(function(p){
-      return (state.cat==='all'||p.c===state.cat) && (!q||p.t.toLowerCase().indexOf(q)>-1);
+      var inCat = state.sub ? p.c===state.sub : (!g.subs || g.subs.indexOf(p.c)>-1);
+      return inCat && (!q||p.t.toLowerCase().indexOf(q)>-1);
     });
     if(state.sort==='low') r.sort(function(a,b){return a.p-b.p;});
     else if(state.sort==='high') r.sort(function(a,b){return b.p-a.p;});
@@ -297,42 +362,52 @@
   }
 
   function render(){
-    var r=list(), grid=$('grid'), html='';
+    var r=list(), html='';
     r.slice(0,state.shown).forEach(function(p){
       var url='https://www.ebay.co.uk/itm/'+p.i;
       html+='<article class="card">'+
         '<a class="img" href="'+url+'" target="_blank" rel="noopener" aria-label="'+esc(p.t)+' on eBay">'+
         '<img src="https://i.ebayimg.com/images/g/'+p.g+'/s-l500.jpg" alt="'+esc(p.t)+'" loading="lazy"></a>'+
-        '<div class="body"><div class="cat">'+esc(NAME[p.c]||'')+'</div>'+
+        '<div class="body"><div class="cat">'+esc(SUB[p.c]||'')+'</div>'+
         '<h4>'+esc(p.t)+'</h4>'+
         '<div class="foot"><span class="price gold">'+money(p.p)+'</span>'+
         '<a class="btn btn-gold buy" href="'+url+'" target="_blank" rel="noopener">Buy on eBay</a></div></div></article>';
     });
-    grid.innerHTML=html;
+    $('grid').innerHTML=html;
     $('empty').hidden=r.length>0;
     $('more').hidden=r.length<=state.shown;
     $('count').textContent=r.length+(r.length===1?' product':' products');
-    $('cat-title').textContent=NAME[state.cat];
-    Array.prototype.forEach.call(chips.children,function(b){b.setAttribute('aria-pressed',b.dataset.cat===state.cat);});
+    $('cat-title').textContent=state.sub?SUB[state.sub]:(state.group==='all'?'All products':(G[state.group].subs.length>1?'All ':'')+G[state.group].n);
+    Array.prototype.forEach.call(groupsEl.children,function(b){b.setAttribute('aria-pressed',b.dataset.group===state.group);});
+    renderChips();
   }
 
-  function setCat(c,scroll){
-    state.cat=NAME[c]?c:'all'; state.shown=PAGE; render();
-    try{history.replaceState(null,'',state.cat==='all'?'#shop':'#shop-'+state.cat);}catch(e){}
-    if(scroll) document.getElementById('shop').scrollIntoView();
+  function setHash(){
+    var h='#shop-'+(state.sub||state.group);
+    try{history.replaceState(null,'',h);}catch(e){}
+  }
+
+  /* go('sextoys') / go('vibes') / go('all') etc. */
+  function go(key,scroll){
+    if(G[key]){state.group=key;state.sub=null;}
+    else if(SUBGROUP[key]){state.group=SUBGROUP[key];state.sub=G[state.group].subs.length>1?key:null;}
+    else {state.group='sextoys';state.sub=null;}
+    state.shown=PAGE; render(); setHash();
+    if(scroll) $('shop').scrollIntoView();
   }
 
   $('more').addEventListener('click',function(){state.shown+=PAGE;render();});
   $('search').addEventListener('input',function(e){state.q=e.target.value;state.shown=PAGE;render();});
   $('sort').addEventListener('change',function(e){state.sort=e.target.value;render();});
-  document.querySelectorAll('[data-go]').forEach(function(a){
-    a.addEventListener('click',function(e){e.preventDefault();setCat(a.dataset.go,true);});
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('[data-go]'); if(!a) return;
+    e.preventDefault(); go(a.dataset.go,true);
   });
 
   var m=location.hash.match(/^#shop-(\w+)/);
-  setCat(m?m[1]:'all');
-  if(m) document.getElementById('shop').scrollIntoView();
-  window.addEventListener('hashchange',function(){var h=location.hash.match(/^#shop-(\w+)/); if(h&&h[1]!==state.cat) setCat(h[1],true);});
+  go(m?m[1]:'sextoys');
+  if(m) $('shop').scrollIntoView();
+  window.addEventListener('hashchange',function(){var h=location.hash.match(/^#shop-(\w+)/); if(h) go(h[1],true);});
 
   /* ---------- Enquiry form (opens the visitor's email app) ---------- */
   $('enquiry').addEventListener('submit',function(e){

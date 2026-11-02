@@ -334,3 +334,91 @@ nav.links a.nav-ebay{color:var(--gold-hi);border-bottom:1px solid var(--gold-lin
 .qr-frame .bl{bottom:-8px;left:-8px;border-right:0;border-top:0}
 .qr-frame .br{bottom:-8px;right:-8px;border-left:0;border-top:0}
 .qr-handle{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--cream-soft)}
+
+/* ---------- Sex Toys: main category ---------- */
+nav.links a.nav-toys{color:var(--gold-hi);font-weight:600}
+.hero-meta span.tc{margin:0;color:var(--gold-hi);font-weight:600}
+.toys{
+  padding:90px 0 100px;border-top:1px solid var(--gold-faint);
+  background:radial-gradient(60% 50% at 50% 0%,rgba(122,52,196,.35) 0%,transparent 70%),var(--night);
+}
+.toys-title{font-size:clamp(2.8rem,7vw,5rem)!important}
+.toys-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:22px;align-items:stretch}
+@media (max-width:900px){.toys-grid{grid-template-columns:1fr}}
+.toy-feature{
+  position:relative;display:block;overflow:hidden;text-decoration:none;min-height:420px;
+  border:1px solid var(--gold-line);outline:1px solid var(--gold-faint);outline-offset:-10px;
+}
+.toy-feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;transition:transform .5s}
+.toy-feature:hover img{transform:scale(1.04)}
+.toy-feature-body{
+  position:absolute;left:0;right:0;bottom:0;padding:90px 24px 30px;text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:linear-gradient(0deg,rgba(7,5,10,.97) 35%,rgba(7,5,10,.75) 70%,transparent);
+}
+.toy-feature-title{font-family:var(--serif);font-size:clamp(1.8rem,3.4vw,2.5rem);letter-spacing:.08em}
+.toy-count{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--cream-soft);margin-bottom:8px}
+.toy-tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.toy-tile{
+  display:flex;flex-direction:column;text-decoration:none;
+  border:1px solid var(--gold-line);background:linear-gradient(180deg,var(--plum),var(--black));
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.toy-tile:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 18px 40px -18px rgba(122,52,196,.7)}
+.toy-tile:last-child:nth-child(odd){grid-column:span 2;flex-direction:row;align-items:stretch}
+.toy-tile:last-child:nth-child(odd) .toy-img{width:50%;flex:0 0 50%}
+.toy-text{display:flex;flex-direction:column;flex:1;justify-content:center}
+.toy-tile:last-child:nth-child(odd) .toy-text{padding:10px 0}
+.toy-img{display:block;background:#fff;aspect-ratio:16/10;overflow:hidden}
+.toy-img img{width:100%;height:100%;object-fit:contain}
+.toy-name{font-family:var(--serif);font-size:1.12rem;letter-spacing:.06em;color:var(--gold-hi);padding:14px 16px 2px}
+.toy-num{font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--cream-soft);padding:0 16px}
+.toy-go{font-size:.66rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);padding:10px 16px 16px;margin-top:auto}
+@media (max-width:520px){
+  .toy-tiles{gap:10px}
+  .toy-name{font-size:.92rem;padding:10px 10px 2px}.toy-num,.toy-go{padding-left:10px;padding-right:10px}
+  .toy-feature{min-height:340px}
+}
+
+/* ---------- Shop: big main-category boxes ---------- */
+.groups{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+@media (max-width:900px){.groups{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:600px){.groups{grid-template-columns:repeat(2,1fr);gap:8px}}
+.group{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  min-height:86px;padding:14px 10px;cursor:pointer;text-align:center;
+  border:1px solid var(--gold-faint);background:linear-gradient(180deg,var(--plum),var(--night));
+  transition:border-color .2s,transform .2s,background .2s;
+}
+.group:hover{border-color:var(--gold-line);transform:translateY(-2px)}
+.group .g-name{font-family:var(--serif);font-size:1rem;letter-spacing:.06em;color:var(--cream)}
+.group .g-num{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.group .g-eyebrow{font-size:.56rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold)}
+.group.big{grid-column:span 2;grid-row:span 2;min-height:184px;border-color:var(--gold-line);
+  background:radial-gradient(80% 90% at 50% 40%,rgba(122,52,196,.5),transparent 75%),linear-gradient(180deg,var(--plum-2),var(--night))}
+.group.big .g-name{font-size:clamp(1.8rem,4vw,2.6rem);background:var(--gold-text);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.1em}
+.group.big .g-num{color:var(--cream-soft)}
+@media (max-width:600px){.group.big{grid-row:span 1;min-height:130px}}
+.group[aria-pressed="true"]{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.group[aria-pressed="true"]:not(.big){background:linear-gradient(180deg,#f0d690,#c99d4c)}
+.group[aria-pressed="true"]:not(.big) .g-name,.group[aria-pressed="true"]:not(.big) .g-num{color:#1a0f08}
+.chips[hidden]{display:none}
+
+.toy-feature img{object-position:center center}
+.toy-feature-body{padding-top:120px}
+.group[data-group="all"]{grid-column:span 2}
+@media (max-width:900px){.group[data-group="all"]{grid-column:span 1}}
+@media (max-width:600px){.group[data-group="all"]{grid-column:span 2}}
+nav.links{gap:24px}
+nav.links a{white-space:nowrap}
+.nav .btn{white-space:nowrap}
+.brand span{white-space:nowrap}
+@media (max-width:1180px){nav.links{display:none}}
+/* keep the Shop Sex Toys button visible on phones */
+@media (max-width:520px){
+  .nav{height:64px;gap:10px}
+  .nav .btn{display:inline-flex;padding:9px 10px;font-size:.56rem;letter-spacing:.14em}
+  .brand img{width:38px;height:38px}
+  .brand span{font-size:.72rem;letter-spacing:.1em}
+  .brand small{display:none}
+}
