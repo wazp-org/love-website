@@ -442,3 +442,34 @@ nav.links a{white-space:nowrap}
 .cat-links-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 20px;margin-top:14px}
 .cat-links-row a{font-size:.74rem;letter-spacing:.12em;color:var(--cream-soft);text-decoration:none}
 .cat-links-row a:hover{color:var(--gold-hi)}
+
+/* ---------- Home parties page ---------- */
+.party-hero .crumbs{margin-bottom:18px}
+.party-hero h1{font-size:clamp(2.4rem,6vw,4.4rem);margin:14px 0 8px}
+.party-lede{color:var(--cream-soft);max-width:52ch;margin:18px 0 28px}
+@media (max-width:900px){.party-lede{margin-left:auto;margin-right:auto}}
+.party-arch img{width:100%;height:100%;object-fit:cover}
+.xmas{
+  padding:96px 0;border-top:1px solid var(--gold-faint);
+  background:radial-gradient(60% 50% at 50% 0%,rgba(122,52,196,.28) 0%,transparent 70%),var(--night);
+}
+.xmas-points{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin:0 auto 48px;max-width:980px;text-align:center}
+@media (max-width:760px){.xmas-points{grid-template-columns:1fr}}
+.xmas-points h3{font-size:1.05rem;letter-spacing:.12em;margin-bottom:6px}
+.xmas-points p{color:var(--cream-soft);font-size:.88rem}
+.xmas-grid{grid-template-columns:repeat(3,1fr);max-width:900px;margin:0 auto}
+@media (max-width:760px){.xmas-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:460px){.xmas-grid{grid-template-columns:1fr;max-width:340px}}
+.xmas .shop-note a{color:var(--gold-hi)}
+.party-why .pillars{margin-top:0}
+.party-steps{padding:96px 0;border-top:1px solid var(--gold-faint)}
+.steps{list-style:none;display:grid;grid-template-columns:repeat(4,1fr);gap:22px;counter-reset:none}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+.steps li{border:1px solid var(--gold-faint);padding:28px 22px;text-align:center;background:rgba(255,255,255,.02)}
+.step-num{display:block;font-family:var(--serif);font-size:2.6rem;line-height:1;margin-bottom:12px}
+.steps h3{font-size:1rem;letter-spacing:.12em;margin-bottom:8px}
+.steps p{color:var(--cream-soft);font-size:.86rem}
+.party-small{font-size:.78rem;color:var(--muted);margin-top:22px}
+form.enquiry select.field-dark{width:100%;margin-bottom:16px}
+nav.links a[aria-current="page"]{color:var(--gold-hi)}

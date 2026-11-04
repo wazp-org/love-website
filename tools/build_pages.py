@@ -168,6 +168,7 @@ HEAD = """<!doctype html>
       <a href="/vibrators/">Vibrators</a>
       <a href="/dildos/">Dildos</a>
       <a href="/lingerie/">Lingerie</a>
+      <a href="/home-parties/">Home Parties</a>
       <a href="/#story">Our Story</a>
       <a class="nav-ebay" href="{ebay}" target="_blank" rel="noopener">eBay Shop</a>
     </nav>
@@ -183,7 +184,7 @@ FOOT = """
     <img src="/images/logo-small.png" alt="">
     <div class="name gold">LOVE AND BEAUTY LIMITED</div>
     <div class="star-rule"><svg><use href="#star"/></svg></div>
-    <div class="flinks"><a href="/">Home</a><a href="/#story">Our Story</a><a href="/#find-us">Find Us</a><a href="/#contact">Contact</a><a href="{ebay}" target="_blank" rel="noopener">eBay Shop</a></div>
+    <div class="flinks"><a href="/">Home</a><a href="/home-parties/">Home Parties</a><a href="/#story">Our Story</a><a href="/#find-us">Find Us</a><a href="/#contact">Contact</a><a href="{ebay}" target="_blank" rel="noopener">eBay Shop</a></div>
     <p class="meta">Family-run in Rotherham, South Yorkshire · Discreet, plain packaging · Adult products are sold to over-18s only.<br>© {year} Love and Beauty Limited</p>
   </div>
 </footer>
@@ -292,7 +293,7 @@ for page in PAGES:
 
 # sitemap + robots
 today = datetime.date.today().isoformat()
-urls = [SITE+"/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
+urls = [SITE+"/", SITE+"/home-parties/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + \
      "".join(f"  <url><loc>{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n"
 open(os.path.join(ROOT, "sitemap.xml"), "w").write(sm)
