@@ -489,3 +489,28 @@ nav.links{gap:18px}nav.links a{letter-spacing:.16em}
   .post-grid-5 .post{flex:0 0 62%;scroll-snap-align:start}
 }
 .post-grid-5 .post img{height:auto}
+
+/* ---------- Website exclusives ---------- */
+.card .img{position:relative}
+.ex-badge{position:absolute;top:10px;left:10px;background:#000c;color:var(--gold-hi);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:5px 8px}
+.ex-sold .img img{opacity:.45}
+.ex-modal{position:fixed;inset:0;z-index:900;background:rgba(5,3,8,.82);display:flex;align-items:flex-start;justify-content:center;padding:4vh 16px;overflow-y:auto}
+.ex-modal[hidden]{display:none}
+.ex-dialog{position:relative;background:var(--night);border:1px solid var(--gold-line);max-width:980px;width:100%;padding:28px}
+.ex-close{position:absolute;top:8px;right:12px;background:none;border:0;color:var(--gold-hi);font-size:2rem;line-height:1;cursor:pointer}
+.ex-dialog-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media (max-width:760px){.ex-dialog-grid{grid-template-columns:1fr}.ex-dialog{padding:20px 16px}}
+.ex-main-img{background:#fff;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+.ex-main-img img{max-width:100%;max-height:100%;object-fit:contain}
+.ex-thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ex-thumbs button{width:64px;height:64px;border:1px solid var(--gold-faint);background:#fff;padding:0;cursor:pointer}
+.ex-thumbs img{width:100%;height:100%;object-fit:contain}
+.ex-dialog h2{font-size:clamp(1.3rem,3vw,1.8rem);margin:8px 0 10px}
+.ex-price{font-family:var(--serif);font-size:1.8rem}
+.ex-stock{color:var(--cream-soft);font-size:.82rem;margin:6px 0 16px}
+.ex-desc{color:var(--cream-soft);font-size:.9rem;margin-bottom:18px}
+.ex-buy{display:flex;gap:10px;flex-wrap:wrap}
+.ex-buy[hidden],.ex-buy [hidden]{display:none}
+.ex-howto{margin:18px 0 0 18px;color:var(--cream-soft);font-size:.82rem}
+.ex-howto li{margin-bottom:6px}
+.ex-howto b{color:var(--cream)}

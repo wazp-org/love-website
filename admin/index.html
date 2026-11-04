@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<title>Listing Tool | Love and Beauty</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#07050a">
+<link rel="icon" type="image/png" href="/images/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  [hidden]{display:none!important}
+  .adm{max-width:1100px;margin:0 auto;padding:28px 20px 80px}
+  .adm h1{font-size:clamp(1.6rem,4vw,2.4rem);margin:8px 0 6px}
+  .adm h2{font-size:1.2rem;margin:0 0 14px;letter-spacing:.08em}
+  .panel{border:1px solid var(--gold-faint);background:rgba(255,255,255,.02);padding:22px;margin-top:22px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .row3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:14px}
+  @media (max-width:700px){.row,.row3{grid-template-columns:1fr}}
+  .adm label{display:block;font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:var(--cream-soft);margin:12px 0 6px}
+  .adm .field-dark{width:100%}
+  .adm textarea{min-height:130px;resize:vertical}
+  .adm .help{font-size:.78rem;color:var(--muted);margin-top:6px}
+  .adm .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+  .adm .btn{padding:11px 18px;font-size:.66rem}
+  .status{margin-top:14px;font-size:.86rem;min-height:1.4em}
+  .status.ok{color:#9be29b}.status.err{color:#ff9a9a}
+  .thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .thumbs figure{position:relative;width:86px;height:86px;border:1px solid var(--gold-faint);background:#fff}
+  .thumbs img{width:100%;height:100%;object-fit:contain}
+  .thumbs button{position:absolute;top:2px;right:2px;width:22px;height:22px;border-radius:50%;border:0;background:#000c;color:#fff;cursor:pointer}
+  table.items{width:100%;border-collapse:collapse;font-size:.84rem}
+  table.items td,table.items th{padding:9px 8px;border-bottom:1px solid var(--gold-faint);text-align:left;vertical-align:middle}
+  table.items th{font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+  table.items img{width:48px;height:48px;object-fit:contain;background:#fff}
+  table.items .q{width:64px}
+  table.items .btn{padding:7px 10px;font-size:.58rem}
+  .tag{font-size:.6rem;letter-spacing:.16em;text-transform:uppercase;padding:3px 6px;border:1px solid var(--gold-faint)}
+  .locked .needs-key{opacity:.4;pointer-events:none}
+  details summary{cursor:pointer;color:var(--gold-hi);font-size:.8rem;letter-spacing:.1em}
+  details ol{margin:10px 0 0 18px;color:var(--cream-soft);font-size:.84rem}
+  details li{margin-bottom:6px}
+</style>
+</head>
+<body>
+<div class="adm" id="app">
+  <p class="eyebrow">Love and Beauty · Private</p>
+  <h1 class="gold">LISTING TOOL</h1>
+  <p style="color:var(--cream-soft)">Add products to <a class="gold" href="/masturbators-and-dildos/" target="_blank">Male Masturbators &amp; Realistic Dildos</a>. Changes show on the website about a minute after you save.</p>
+
+  <!-- 1. Connect -->
+  <div class="panel">
+    <h2 class="gold">1. Connect (once per computer)</h2>
+    <label for="token">GitHub key</label>
+    <input class="field-dark" id="token" type="password" autocomplete="off" placeholder="github_pat_…">
+    <p class="help">Kept only in this browser on this computer. Never share it.</p>
+    <details>
+      <summary>How to get a GitHub key</summary>
+      <ol>
+        <li>Open <a class="gold" href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">github.com → Settings → Fine-grained tokens → Generate new token</a>.</li>
+        <li>Name: <b>Website listing tool</b>. Expiration: 1 year.</li>
+        <li>Resource owner: <b>wazp-org</b>. Repository access: <b>Only select repositories → love-website</b>.</li>
+        <li>Permissions → Repository permissions → <b>Contents: Read and write</b>.</li>
+        <li>Click Generate, copy the key and paste it above, then press Connect.</li>
+      </ol>
+    </details>
+    <div class="actions"><button class="btn btn-gold" id="connect">Connect</button><button class="btn" id="forget">Forget key</button></div>
+    <div class="status" id="conn-status"></div>
+  </div>
+
+  <div id="work" class="locked">
+  <!-- 2. Settings -->
+  <div class="panel needs-key">
+    <h2 class="gold">2. Payment settings</h2>
+    <div class="row">
+      <div>
+        <label for="s-paypal">PayPal.me name</label>
+        <input class="field-dark" id="s-paypal" placeholder="e.g. DanielGilman (from paypal.me/DanielGilman)">
+        <p class="help">Create or find yours at <a class="gold" href="https://www.paypal.com/paypalme/my/landing" target="_blank" rel="noopener">paypal.me</a>. Leave empty to only show "Order by email".</p>
+      </div>
+      <div>
+        <label for="s-email">Order email</label>
+        <input class="field-dark" id="s-email" type="email">
+      </div>
+    </div>
+    <label for="s-delivery">Delivery wording</label>
+    <input class="field-dark" id="s-delivery">
+    <div class="actions"><button class="btn btn-gold" id="save-settings">Save settings</button></div>
+    <div class="status" id="set-status"></div>
+  </div>
+
+  <!-- 3. Add / edit -->
+  <div class="panel needs-key" id="editor">
+    <h2 class="gold" id="ed-title">3. Add a product</h2>
+    <label for="p-title">Title</label>
+    <input class="field-dark" id="p-title" maxlength="120" placeholder="Brand, product name, colour, size">
+    <div class="row3">
+      <div><label for="p-cat">Category</label>
+        <select class="field-dark" id="p-cat">
+          <option>Male Masturbators</option><option>Realistic Dildos</option>
+        </select></div>
+      <div><label for="p-price">Price £</label><input class="field-dark" id="p-price" type="number" min="0" step="0.01" inputmode="decimal"></div>
+      <div><label for="p-qty">Quantity</label><input class="field-dark" id="p-qty" type="number" min="0" step="1" value="1" inputmode="numeric"></div>
+    </div>
+    <label for="p-sku">SKU / shelf code (not shown to buyers)</label>
+    <input class="field-dark" id="p-sku" placeholder="e.g. S21-PMP006TRA">
+    <label for="p-desc">Description</label>
+    <textarea class="field-dark" id="p-desc" placeholder="What it is, size, material, what's in the box…"></textarea>
+    <label for="p-photos">Photos (first one is the main photo)</label>
+    <input class="field-dark" id="p-photos" type="file" accept="image/*" multiple>
+    <p class="help">Remember: black dots over anything explicit before uploading. Photos are shrunk automatically.</p>
+    <div class="thumbs" id="p-thumbs"></div>
+    <label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:.84rem"><input type="checkbox" id="p-hidden"> Hide from the website (keep as a draft)</label>
+    <div class="actions"><button class="btn btn-gold" id="save-product">Save product</button><button class="btn" id="cancel-edit" hidden>Cancel edit</button></div>
+    <div class="status" id="ed-status"></div>
+  </div>
+
+  <!-- 4. List -->
+  <div class="panel needs-key">
+    <h2 class="gold">4. Your products</h2>
+    <div style="overflow-x:auto"><table class="items"><thead><tr><th></th><th>Title</th><th>Price</th><th>Qty</th><th></th></tr></thead><tbody id="items"></tbody></table></div>
+    <p class="help" id="items-empty">No products yet.</p>
+    <div class="status" id="list-status"></div>
+  </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var REPO='wazp-org/love-website', BRANCH='main', FILE='exclusives.json', API='https://api.github.com/repos/'+REPO+'/contents/';
+  var $=function(id){return document.getElementById(id);};
+  var KEY='lb_gh_token', token='', DATA=null, SHA=null, editing=null, photos=[]; // photos: {path} existing or {data,name} new
+  try{ token=localStorage.getItem(KEY)||''; }catch(e){}
+  $('token').value=token;
+
+  function status(el,msg,cls){ $(el).textContent=msg; $(el).className='status '+(cls||''); }
+  function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+  function b64utf8(str){ return btoa(unescape(encodeURIComponent(str))); }
+  function utf8b64(b){ return decodeURIComponent(escape(atob(b.replace(/\n/g,'')))); }
+  function slug(s){ return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)||'item'; }
+
+  function gh(method,path,body){
+    return fetch(API+path+(method==='GET'?'?ref='+BRANCH+'&t='+Date.now():''),{
+      method:method, headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json'},
+      body: body?JSON.stringify(body):undefined
+    }).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error((j&&j.message)||('GitHub error '+r.status)); return j; }); });
+  }
+  function load(){
+    return gh('GET',FILE).then(function(j){ SHA=j.sha; DATA=JSON.parse(utf8b64(j.content)); DATA.products=DATA.products||[]; fill(); });
+  }
+  function saveData(msg){
+    return gh('PUT',FILE,{message:msg,branch:BRANCH,sha:SHA,content:b64utf8(JSON.stringify(DATA,null,2)+'\n')})
+      .then(function(j){ SHA=j.content.sha; })
+      .catch(function(e){ // someone else saved in between: reload and tell the user
+        if(/does not match|sha/i.test(e.message)) return load().then(function(){ throw new Error('The list changed elsewhere. It has been reloaded, please try again.'); });
+        throw e;
+      });
+  }
+
+  function fill(){
+    var s=DATA.settings||{};
+    $('s-paypal').value=s.paypalme||''; $('s-email').value=s.email||''; $('s-delivery').value=s.delivery||'';
+    var rows=DATA.products.slice().sort(function(a,b){return (b.added||'').localeCompare(a.added||'');});
+    $('items').innerHTML=rows.map(function(p){
+      return '<tr data-id="'+esc(p.id)+'"><td>'+(p.images&&p.images[0]?'<img src="/'+esc(p.images[0])+'" alt="">':'')+'</td>'+
+        '<td>'+esc(p.title)+(p.hidden?' <span class="tag">Hidden</span>':'')+(p.qty>0?'':' <span class="tag">Sold out</span>')+'<br><small style="color:var(--muted)">'+esc(p.sku||'')+'</small></td>'+
+        '<td>£'+Number(p.price).toFixed(2)+'</td>'+
+        '<td><input class="field-dark q" type="number" min="0" value="'+(p.qty||0)+'" data-act="qty"></td>'+
+        '<td style="white-space:nowrap"><button class="btn" data-act="edit">Edit</button> <a class="btn" href="/masturbators-and-dildos/#'+esc(p.id)+'" target="_blank">View</a> <button class="btn" data-act="del">Delete</button></td></tr>';
+    }).join('');
+    $('items-empty').hidden=rows.length>0;
+  }
+
+  $('connect').addEventListener('click',function(){
+    token=$('token').value.trim(); if(!token){ status('conn-status','Paste your GitHub key first.','err'); return; }
+    status('conn-status','Connecting…');
+    load().then(function(){ try{localStorage.setItem(KEY,token);}catch(e){} $('work').classList.remove('locked'); status('conn-status','Connected. '+DATA.products.length+' product(s).','ok'); })
+      .catch(function(e){ status('conn-status','Could not connect: '+e.message+'. Check the key has Contents: Read and write on love-website.','err'); });
+  });
+  $('forget').addEventListener('click',function(){ try{localStorage.removeItem(KEY);}catch(e){} token=''; $('token').value=''; $('work').classList.add('locked'); status('conn-status','Key removed from this browser.'); });
+  if(token) $('connect').click();
+
+  $('save-settings').addEventListener('click',function(){
+    DATA.settings={paypalme:$('s-paypal').value.trim().replace(/^https?:\/\/(www\.)?(paypal\.me|paypal\.com\/paypalme)\//i,'').replace(/\/.*$/,''),
+      email:$('s-email').value.trim(), delivery:$('s-delivery').value.trim()};
+    status('set-status','Saving…');
+    saveData('Update website shop settings').then(function(){ status('set-status','Saved.','ok'); fill(); }).catch(function(e){ status('set-status',e.message,'err'); });
+  });
+
+  // photos: shrink to max 1600px JPEG
+  function shrink(file){
+    return new Promise(function(res,rej){
+      var img=new Image(), url=URL.createObjectURL(file);
+      img.onload=function(){ var m=1600, w=img.width, h=img.height, r=Math.min(1,m/Math.max(w,h));
+        var c=document.createElement('canvas'); c.width=Math.round(w*r); c.height=Math.round(h*r);
+        var x=c.getContext('2d'); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(img,0,0,c.width,c.height);
+        URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',0.85)); };
+      img.onerror=function(){ rej(new Error('Could not read '+file.name)); }; img.src=url;
+    });
+  }
+  function drawThumbs(){
+    $('p-thumbs').innerHTML=photos.map(function(p,i){ return '<figure><img src="'+(p.data||('/'+p.path))+'" alt=""><button type="button" data-i="'+i+'" title="Remove">×</button></figure>'; }).join('');
+  }
+  $('p-photos').addEventListener('change',function(e){
+    var files=[].slice.call(e.target.files); status('ed-status','Preparing photos…');
+    Promise.all(files.map(shrink)).then(function(list){ list.forEach(function(d){photos.push({data:d});}); drawThumbs(); status('ed-status',''); e.target.value=''; })
+      .catch(function(err){ status('ed-status',err.message,'err'); });
+  });
+  $('p-thumbs').addEventListener('click',function(e){ var b=e.target.closest('button'); if(!b) return; photos.splice(+b.dataset.i,1); drawThumbs(); });
+
+  function resetForm(){
+    editing=null; photos=[]; drawThumbs();
+    ['p-title','p-price','p-sku','p-desc'].forEach(function(i){$(i).value='';}); $('p-qty').value=1; $('p-hidden').checked=false;
+    $('ed-title').textContent='3. Add a product'; $('cancel-edit').hidden=true;
+  }
+  $('cancel-edit').addEventListener('click',function(){ resetForm(); status('ed-status',''); });
+
+  $('save-product').addEventListener('click',function(){
+    var title=$('p-title').value.trim(), price=parseFloat($('p-price').value), qty=parseInt($('p-qty').value,10);
+    if(!title||!(price>0)){ status('ed-status','Add a title and a price.','err'); return; }
+    if(!photos.length && !confirm('Save without any photos?')) return;
+    var btn=$('save-product'); btn.disabled=true;
+    var id=editing||(slug(title)+'-'+Date.now().toString(36));
+    var n=0, paths=[];
+    // upload new photos one by one, keep existing ones
+    var chain=Promise.resolve();
+    photos.forEach(function(p){
+      chain=chain.then(function(){
+        if(p.path){ paths.push(p.path); return; }
+        n++; status('ed-status','Uploading photo '+n+'…');
+        var path='images/shop/'+id+'-'+n+'-'+Date.now().toString(36)+'.jpg';
+        return gh('PUT',path,{message:'Add photo for '+title,branch:BRANCH,content:p.data.split(',')[1]}).then(function(){ paths.push(path); p.path=path; delete p.data; });
+      });
+    });
+    chain.then(function(){
+      status('ed-status','Saving product…');
+      var item={id:id,title:title,category:$('p-cat').value,price:Math.round(price*100)/100,qty:isNaN(qty)?0:qty,
+        sku:$('p-sku').value.trim(),description:$('p-desc').value.trim(),images:paths,hidden:$('p-hidden').checked};
+      var old=DATA.products.filter(function(p){return p.id===id;})[0];
+      item.added=old?old.added:new Date().toISOString();
+      DATA.products=DATA.products.filter(function(p){return p.id!==id;}).concat([item]);
+      return saveData((old?'Update':'Add')+' website product: '+title);
+    }).then(function(){ status('ed-status','Saved. It will show on the website in about a minute.','ok'); resetForm(); fill(); })
+      .catch(function(e){ status('ed-status','Not saved: '+e.message,'err'); })
+      .then(function(){ btn.disabled=false; });
+  });
+
+  $('items').addEventListener('click',function(e){
+    var b=e.target.closest('[data-act]'); if(!b||b.tagName==='INPUT') return;
+    var id=b.closest('tr').dataset.id, p=DATA.products.filter(function(x){return x.id===id;})[0];
+    if(b.dataset.act==='edit'){
+      editing=id; $('p-title').value=p.title; $('p-cat').value=p.category; $('p-price').value=p.price; $('p-qty').value=p.qty;
+      $('p-sku').value=p.sku||''; $('p-desc').value=p.description||''; $('p-hidden').checked=!!p.hidden;
+      photos=(p.images||[]).map(function(x){return {path:x};}); drawThumbs();
+      $('ed-title').textContent='3. Edit product'; $('cancel-edit').hidden=false; $('editor').scrollIntoView({behavior:'smooth'});
+    }
+    if(b.dataset.act==='del' && confirm('Remove "'+p.title+'" from the website?')){
+      DATA.products=DATA.products.filter(function(x){return x.id!==id;});
+      status('list-status','Removing…');
+      saveData('Remove website product: '+p.title).then(function(){ status('list-status','Removed.','ok'); fill(); }).catch(function(e){ status('list-status',e.message,'err'); });
+    }
+  });
+  $('items').addEventListener('change',function(e){
+    if(e.target.dataset.act!=='qty') return;
+    var id=e.target.closest('tr').dataset.id, p=DATA.products.filter(function(x){return x.id===id;})[0];
+    p.qty=Math.max(0,parseInt(e.target.value,10)||0);
+    status('list-status','Updating stock…');
+    saveData('Stock '+p.qty+': '+p.title).then(function(){ status('list-status','Stock updated.','ok'); fill(); }).catch(function(e){ status('list-status',e.message,'err'); });
+  });
+})();
+</script>
+</body>
+</html>

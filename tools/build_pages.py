@@ -124,6 +124,7 @@ def nav_links(active):
 
 def cat_footer():
     links = "".join(f'<a href="/{p["slug"]}/">{e(p["name"])}</a>' for p in PAGES)
+    links = links.replace('Sex Toys</a>', 'Sex Toys</a><a href="/masturbators-and-dildos/">Male Masturbators &amp; Realistic Dildos</a>', 1)
     return f'<div class="cat-links"><p class="eyebrow">Shop by category</p><div class="cat-links-row">{links}</div></div>'
 
 HEAD = """<!doctype html>
@@ -165,8 +166,7 @@ HEAD = """<!doctype html>
     <a class="brand" href="/" aria-label="Love and Beauty Limited, home"><img src="/images/logo-small.png" alt=""><span>LOVE AND BEAUTY<small>LIMITED</small></span></a>
     <nav class="links" aria-label="Main">
       <a class="nav-toys" href="/sex-toys/">Sex Toys</a>
-      <a href="/vibrators/">Vibrators</a>
-      <a href="/dildos/">Dildos</a>
+      <a href="/masturbators-and-dildos/">Masturbators &amp; Dildos</a>
       <a href="/lingerie/">Lingerie</a>
       <a href="/home-parties/">Home Parties</a>
       <a href="/#story">Our Story</a>
@@ -293,7 +293,7 @@ for page in PAGES:
 
 # sitemap + robots
 today = datetime.date.today().isoformat()
-urls = [SITE+"/", SITE+"/home-parties/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
+urls = [SITE+"/", SITE+"/masturbators-and-dildos/", SITE+"/home-parties/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
 # brand images listed for the homepage so Google can show them under the result
 HOME_IMAGES = ["ig-welcome","ig-lingerie","ig-new-in","ig-link-in-bio","ig-shop-with-us"]
 def img_tags(u):
@@ -302,5 +302,5 @@ def img_tags(u):
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' + \
      "".join(f"  <url><loc>{u}</loc><lastmod>{today}</lastmod>{img_tags(u)}</url>\n" for u in urls) + "</urlset>\n"
 open(os.path.join(ROOT, "sitemap.xml"), "w").write(sm)
-open(os.path.join(ROOT, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+open(os.path.join(ROOT, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: {SITE}/sitemap.xml\n")
 print("sitemap.xml + robots.txt written")
