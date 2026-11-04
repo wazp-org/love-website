@@ -479,3 +479,13 @@ nav.links a[aria-current="page"]{color:var(--gold-hi)}
 nav.links{margin-left:28px;margin-right:auto;justify-content:center;flex:1;min-width:0}
 nav.links{gap:18px}nav.links a{letter-spacing:.16em}
 @media (max-width:1250px){nav.links{display:none}}
+
+/* five Instagram tiles near the top of the homepage */
+.post-grid-5{grid-template-columns:repeat(5,1fr);gap:16px}
+@media (max-width:1000px){.post-grid-5{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:700px){
+  .post-grid-5{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:0 16px 8px;scrollbar-width:none}
+  .post-grid-5::-webkit-scrollbar{display:none}
+  .post-grid-5 .post{flex:0 0 62%;scroll-snap-align:start}
+}
+.post-grid-5 .post img{height:auto}

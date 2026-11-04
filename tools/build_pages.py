@@ -294,8 +294,13 @@ for page in PAGES:
 # sitemap + robots
 today = datetime.date.today().isoformat()
 urls = [SITE+"/", SITE+"/home-parties/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
-sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + \
-     "".join(f"  <url><loc>{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls) + "</urlset>\n"
+# brand images listed for the homepage so Google can show them under the result
+HOME_IMAGES = ["ig-welcome","ig-lingerie","ig-new-in","ig-link-in-bio","ig-shop-with-us"]
+def img_tags(u):
+    if u != SITE+"/": return ""
+    return "".join(f"<image:image><image:loc>{SITE}/images/{n}.jpg</image:loc></image:image>" for n in HOME_IMAGES)
+sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n' + \
+     "".join(f"  <url><loc>{u}</loc><lastmod>{today}</lastmod>{img_tags(u)}</url>\n" for u in urls) + "</urlset>\n"
 open(os.path.join(ROOT, "sitemap.xml"), "w").write(sm)
 open(os.path.join(ROOT, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
 print("sitemap.xml + robots.txt written")
