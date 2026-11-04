@@ -4,5 +4,23 @@
     "email": "dannygilman@me.com",
     "delivery": "Free UK delivery by Royal Mail 2nd Class, in plain, discreet packaging."
   },
-  "products": []
+  "products": [
+    {
+      "id": "lovetoy-streetgirls-3",
+      "title": "Lovetoy Streetgirl's #3 Realistic Male Masturbator – Dual Entry, TPE, 1.45kg",
+      "category": "Male Masturbators",
+      "price": 49.99,
+      "qty": 2,
+      "sku": "S20-RIMBA4396",
+      "description": "A life-size, realistic dual-entry masturbator from Lovetoy, moulded for an authentic look and feel.\n\n• Two textured inner channels: vaginal (13cm deep, lined with stimulating nubs) and a tighter anal channel (15cm deep)\n• Ultra-soft, skin-feel TPE – body-safe, phthalate-free and latex-free\n• Size: 19.5 x 16 x 9cm, weight 1.45kg – heavy enough to stay put, lay it flat or hold it close\n• Easy to clean: rinse the channels with warm running water and pat dry\n• Use plenty of water-based lube; it loosens up nicely after the first few uses\n\nBrand new and sealed in the original Lovetoy box (#3, EAN 6970260907545). Sent in plain, unbranded packaging. Adults 18+ only.",
+      "images": [
+        "images/shop/lovetoy-streetgirls-3-1.jpg",
+        "images/shop/lovetoy-streetgirls-3-2.jpg",
+        "images/shop/lovetoy-streetgirls-3-3.jpg",
+        "images/shop/lovetoy-streetgirls-3-4.jpg"
+      ],
+      "hidden": false,
+      "added": "2026-11-04T12:28:07.721561Z"
+    }
+  ]
 }
