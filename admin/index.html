@@ -182,7 +182,7 @@
   if(token) $('connect').click();
 
   $('save-settings').addEventListener('click',function(){
-    DATA.settings={paypalme:$('s-paypal').value.trim().replace(/^https?:\/\/(www\.)?(paypal\.me|paypal\.com\/paypalme)\//i,'').replace(/\/.*$/,''),
+    DATA.settings={paypalme:$('s-paypal').value.trim().replace(/^https?:\/\/(www\.)?(paypal\.me|paypal\.com\/paypalme)\//i,'').replace(/\/.*$/,''.replace(/^@/,''),
       email:$('s-email').value.trim(), delivery:$('s-delivery').value.trim()};
     status('set-status','Saving…');
     saveData('Update website shop settings').then(function(){ status('set-status','Saved.','ok'); fill(); }).catch(function(e){ status('set-status',e.message,'err'); });

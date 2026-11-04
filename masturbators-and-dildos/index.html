@@ -127,7 +127,7 @@
   var DATA={settings:{},products:[]}, list=[];
 
   function paypalLink(p){
-    var u=(DATA.settings.paypalme||'').trim().replace(/^https?:\/\/(www\.)?(paypal\.me|paypal\.com\/paypalme)\//i,'').replace(/\/.*$/,'');
+    var u=(DATA.settings.paypalme||'').trim().replace(/^https?:\/\/(www\.)?(paypal\.me|paypal\.com\/paypalme)\//i,'').replace(/\/.*$/,'').replace(/^@/,'');
     return u ? 'https://www.paypal.com/paypalme/'+encodeURIComponent(u)+'/'+Number(p.price).toFixed(2)+'GBP' : '';
   }
   function emailLink(p){
