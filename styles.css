@@ -473,3 +473,9 @@ nav.links a{white-space:nowrap}
 .party-small{font-size:.78rem;color:var(--muted);margin-top:22px}
 form.enquiry select.field-dark{width:100%;margin-bottom:16px}
 nav.links a[aria-current="page"]{color:var(--gold-hi)}
+
+/* header: keep the logo text clear of the menu at every width */
+.brand{flex-shrink:0}
+nav.links{margin-left:28px;margin-right:auto;justify-content:center;flex:1;min-width:0}
+nav.links{gap:18px}nav.links a{letter-spacing:.16em}
+@media (max-width:1250px){nav.links{display:none}}
