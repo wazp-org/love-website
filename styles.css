@@ -514,3 +514,15 @@ nav.links{gap:18px}nav.links a{letter-spacing:.16em}
 .ex-howto{margin:18px 0 0 18px;color:var(--cream-soft);font-size:.82rem}
 .ex-howto li{margin-bottom:6px}
 .ex-howto b{color:var(--cream)}
+
+/* Website Shop (/shop/) */
+.ws-prices{display:flex;align-items:baseline;gap:.5em;flex-wrap:wrap}
+.card .was,.ex-price .was{color:rgba(255,255,255,.45);font-size:.85em;text-decoration:line-through}
+.card .img{position:relative}
+.ws-badge{position:absolute;top:10px;left:10px;background:linear-gradient(135deg,#e6c77a,#b8913f);color:#130b18;font:600 .7rem/1 Montserrat,sans-serif;letter-spacing:.12em;padding:.45em .7em;border-radius:3px}
+.ws-save{font:600 .8rem Montserrat,sans-serif;color:#c79bff;letter-spacing:.05em}
+.ws-more{margin-top:1rem;font-size:.9rem}
+.nav-shop{color:#e6c77a !important}
+
+/* make room for Website Shop + eBay Shop in the header; Our Story stays in the footer */
+header.site .links a[href="/#story"]{display:none}

@@ -170,7 +170,8 @@ HEAD = """<!doctype html>
       <a href="/lingerie/">Lingerie</a>
       <a href="/home-parties/">Home Parties</a>
       <a href="/#story">Our Story</a>
-      <a class="nav-ebay" href="{ebay}" target="_blank" rel="noopener">eBay Shop</a>
+      <a class="nav-shop" href="/shop/">Website Shop</a>
+      <a class="nav-ebay" href="/ebay-shop/">eBay Shop</a>
     </nav>
     <a class="btn btn-gold" href="/sex-toys/">Shop Sex Toys</a>
   </div>
@@ -184,7 +185,7 @@ FOOT = """
     <img src="/images/logo-small.png" alt="">
     <div class="name gold">LOVE AND BEAUTY LIMITED</div>
     <div class="star-rule"><svg><use href="#star"/></svg></div>
-    <div class="flinks"><a href="/">Home</a><a href="/home-parties/">Home Parties</a><a href="/#story">Our Story</a><a href="/#find-us">Find Us</a><a href="/#contact">Contact</a><a href="{ebay}" target="_blank" rel="noopener">eBay Shop</a></div>
+    <div class="flinks"><a href="/">Home</a><a href="/home-parties/">Home Parties</a><a href="/#story">Our Story</a><a href="/#find-us">Find Us</a><a href="/#contact">Contact</a><a href="/shop/">Website Shop</a><a href="/ebay-shop/">eBay Shop</a></div>
     <p class="meta">Family-run in Rotherham, South Yorkshire · Discreet, plain packaging · Adult products are sold to over-18s only.<br>© {year} Love and Beauty Limited</p>
   </div>
 </footer>
@@ -291,9 +292,181 @@ for page in PAGES:
     open(os.path.join(ROOT, page["slug"], "index.html"), "w", encoding="utf-8").write(out)
     print(f"/{page['slug']}/  {len(items)} products")
 
+# ---------------------------------------------------------------------------
+# Two whole-shop pages:
+#   /shop/       Website Shop - every eBay listing, 15% off, pay by PayPal or order by email
+#   /ebay-shop/  eBay Shop    - every eBay listing at eBay price, buy on eBay
+# ---------------------------------------------------------------------------
+DISCOUNT = 0.15
+NO_DISCOUNT = ["lamai"]          # sold at eBay price (they lose money if discounted)
+EX = json.load(open(os.path.join(ROOT, "exclusives.json"), encoding="utf-8"))
+SETTINGS = EX.get("settings", {})
+PAYPALME = re.sub(r"^https?://(www\.)?(paypal\.me|paypal\.com/paypalme)/", "", SETTINGS.get("paypalme","").strip(), flags=re.I).split("/")[0].lstrip("@")
+ORDER_EMAIL = SETTINGS.get("email") or "sales@loveandbeautysales.co.uk"
+DELIVERY = SETTINGS.get("delivery") or "Free UK delivery, in plain, discreet packaging."
+SHOP_ORDER = ["vibes","realistic","anal","rings","him","lingerie","bondage","clubwear","menswear","lube","gifts","beauty"]
+
+def site_price(p):
+    if any(w in p["t"].lower() for w in NO_DISCOUNT): return p["p"]
+    return round(p["p"] * (1 - DISCOUNT) + 1e-9, 2)
+
+def shop_card(p, direct):
+    img = f"https://i.ebayimg.com/images/g/{p['g']}/s-l500.jpg"
+    ebay = f"https://www.ebay.co.uk/itm/{p['i']}"
+    if direct:
+        sp = site_price(p); off = sp < p["p"]
+        pr = (f'<span class="price gold">£{sp:.2f}</span>' + (f'<s class="was">£{p["p"]:.2f}</s>' if off else ''))
+        return (f'<article class="card" id="p{p["i"]}" data-id="{p["i"]}" data-price="{sp}" data-was="{p["p"]}" data-c="{p["c"]}" data-t="{e(p["t"].lower())}" data-title="{e(p["t"])}" data-img="{img}">'
+                f'<a class="img ws-open" href="#p{p["i"]}"><img src="{img}" alt="{e(p["t"])}" loading="lazy" width="500" height="500">'
+                + ('<span class="ws-badge">15% OFF</span>' if off else '') + '</a>'
+                f'<div class="body"><div class="cat">{e(SUBNAME[p["c"]])}</div><h4>{e(p["t"])}</h4>'
+                f'<div class="foot"><span class="ws-prices">{pr}</span><a class="btn btn-gold buy ws-open" href="#p{p["i"]}">Buy now</a></div></div></article>')
+    return (f'<article class="card" data-price="{p["p"]}" data-c="{p["c"]}" data-t="{e(p["t"].lower())}">'
+            f'<a class="img" href="{ebay}" target="_blank" rel="noopener"><img src="{img}" alt="{e(p["t"])}" loading="lazy" width="500" height="500"></a>'
+            f'<div class="body"><div class="cat">{e(SUBNAME[p["c"]])}</div><h4>{e(p["t"])}</h4>'
+            f'<div class="foot"><span class="price gold">£{p["p"]:.2f}</span><a class="btn btn-gold buy" href="{ebay}" target="_blank" rel="noopener">Buy on eBay</a></div></div></article>')
+
+SHOP_JS = """
+<script>
+(function(){
+  var gate=document.getElementById('age-gate');
+  try{ if(localStorage.getItem('lb_age_ok')==='1') gate.hidden=true; }catch(e){}
+  document.getElementById('gate-enter').addEventListener('click',function(){gate.hidden=true;try{localStorage.setItem('lb_age_ok','1');}catch(e){}});
+  var $=function(id){return document.getElementById(id);};
+  var grid=$('grid'), cards=[].slice.call(grid.children), q=$('search'), s=$('sort'), cat=$('catsel');
+  function apply(){
+    var t=(q.value||'').toLowerCase().trim(), c=cat.value, shown=0, list=cards.slice();
+    if(s.value==='low') list.sort(function(a,b){return a.dataset.price-b.dataset.price;});
+    if(s.value==='high') list.sort(function(a,b){return b.dataset.price-a.dataset.price;});
+    list.forEach(function(el){ var ok=(!t||el.dataset.t.indexOf(t)>-1)&&(!c||el.dataset.c===c); el.hidden=!ok; if(ok) shown++; grid.appendChild(el); });
+    $('count').textContent=shown+(shown===1?' product':' products');
+    $('empty').hidden=shown>0;
+  }
+  q.addEventListener('input',apply); s.addEventListener('change',apply); cat.addEventListener('change',apply);
+  var modal=$('modal'); if(!modal) return;
+  var PP=modal.dataset.paypal, EM=modal.dataset.email;
+  function money(v){return '\\u00a3'+Number(v).toFixed(2);}
+  function open(card){
+    var d=card.dataset, price=Number(d.price), was=Number(d.was), title=d.title;
+    $('m-img').src=d.img.replace('s-l500','s-l1600'); $('m-img').alt=title;
+    $('m-title').textContent=title;
+    $('m-cat').textContent=card.querySelector('.cat').textContent;
+    $('m-price').innerHTML=money(price)+(price<was?' <s class="was">'+money(was)+'</s> <span class="ws-save">Save '+money(was-price)+'</span>':'');
+    $('m-paypal').href='https://www.paypal.com/paypalme/'+encodeURIComponent(PP)+'/'+price.toFixed(2)+'GBP';
+    var body='Hello, I would like to order:\\n\\n'+title+' ('+money(price)+')\\nRef: '+d.id+'\\nSize / colour (if any):\\n\\nMy name:\\nDelivery address:\\nPhone (optional):\\n\\nI confirm I am 18 or over.';
+    $('m-email').href='mailto:'+EM+'?subject='+encodeURIComponent('Website order: '+title)+'&body='+encodeURIComponent(body);
+    $('m-ebay').href='https://www.ebay.co.uk/itm/'+d.id;
+    $('m-ref').textContent=d.id;
+    $('m-price2').textContent=money(price);
+    modal.hidden=false; document.body.style.overflow='hidden';
+    try{history.replaceState(null,'','#p'+d.id);}catch(e){}
+  }
+  function close(){ modal.hidden=true; document.body.style.overflow=''; try{history.replaceState(null,'',location.pathname);}catch(e){} }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('.ws-open'); if(a){ e.preventDefault(); open(a.closest('.card')); return; }
+    if(e.target===modal) close();
+  });
+  $('m-close').addEventListener('click',close);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&!modal.hidden) close(); });
+  var h=location.hash.slice(1); if(h){ var c=document.getElementById(h); if(c) open(c); }
+})();
+</script>
+</body>
+</html>
+"""
+
+def build_shop(direct):
+    items = [p for s in SHOP_ORDER for p in PRODUCTS if p["c"] == s]
+    slug = "shop" if direct else "ebay-shop"
+    canon = f"{SITE}/{slug}/"
+    if direct:
+        name, h1 = "Website Shop", "WEBSITE SHOP"
+        title = "Shop Direct – 15% Off Every eBay Price | Love and Beauty"
+        desc = f"Buy direct from Love and Beauty and save 15% on our eBay prices across {len(items)} sex toys, lingerie and more. Pay by PayPal or order by email. Free discreet UK delivery."
+        intro = [f"Every product from our eBay shop, sold direct from our family-run business in Rotherham, South Yorkshire, and <b>15% cheaper than our eBay prices</b>.",
+                 "Pay securely with PayPal, or send us an order by email and we'll reply with how to pay. " + e(DELIVERY)]
+        note = f"Prices are 15% below our eBay prices (updated {e(UPDATED)}). Stock is shared with our eBay shop, so if an item has just sold out we'll let you know and refund you in full straight away. Adults 18+ only."
+    else:
+        name, h1 = "eBay Shop", "EBAY SHOP"
+        title = "Our eBay Shop – Sex Toys, Lingerie & More | Love and Beauty"
+        desc = f"Browse all {len(items)} products in the Love and Beauty eBay shop (loveandbeautyltd) and check out securely on eBay. Discreet UK delivery."
+        intro = ["Our full eBay shop (<b>loveandbeautyltd</b>) in one place. Tap <em>Buy on eBay</em> to check out securely with eBay's buyer protection.",
+                 'Want to save 15%? The same products are cheaper when you buy direct in our <a class="gold" href="/shop/">Website Shop</a>.']
+        note = f'Prices as listed on eBay (updated {e(UPDATED)}). <a class="gold" href="{EBAY_SHOP}" target="_blank" rel="noopener">Open our eBay shop</a>. Every order is sent in plain, discreet packaging.'
+    jl = json.dumps({"@context":"https://schema.org","@type":"CollectionPage","name":name,"url":canon,"description":desc}, ensure_ascii=False)
+    head = HEAD.format(title=e(title), desc=e(desc), canon=canon, site=SITE, ebay=EBAY_SHOP,
+                       jsonld=f'<script type="application/ld+json">{jl}</script>')
+    opts = '<option value="">All categories</option>' + "".join(
+        f'<option value="{s}">{e(SUBNAME[s])} ({sum(1 for p in items if p["c"]==s)})</option>' for s in SHOP_ORDER if any(p["c"]==s for p in items))
+    switch = ('<div class="chips static-chips">'
+              f'<a class="chip" href="/shop/" aria-pressed="{"true" if direct else "false"}">Website Shop · 15% off</a>'
+              f'<a class="chip" href="/ebay-shop/" aria-pressed="{"false" if direct else "true"}">eBay Shop</a></div>')
+    body = f"""
+<main>
+<section class="cat-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span>›</span> {name}</nav>
+    <p class="eyebrow">Love and Beauty · {"Buy direct and save 15%" if direct else "Buy on eBay"}</p>
+    <h1 class="gold">{h1}</h1>
+    <div class="star-rule"><svg><use href="#star"/></svg></div>
+    <div class="cat-intro">{"".join(f"<p>{t}</p>" for t in intro)}</div>
+  </div>
+</section>
+<section class="shop cat-shop">
+  <div class="wrap">
+    {switch}
+    <div class="tools">
+      <div><h2 class="gold cat-h2">{name}</h2><div class="count" id="count">{len(items)} products</div></div>
+      <div class="tools-right">
+        <input class="field-dark" id="search" type="search" placeholder="Search {len(items)} products…" aria-label="Search">
+        <select class="field-dark" id="catsel" aria-label="Category">{opts}</select>
+        <select class="field-dark" id="sort" aria-label="Sort"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
+      </div>
+    </div>
+    <div class="grid" id="grid">{''.join(shop_card(p, direct) for p in items)}</div>
+    <p class="empty" id="empty" hidden>Nothing matches that search.</p>
+    <p class="shop-note">{note}</p>
+  </div>
+</section>
+</main>"""
+    if direct:
+        body += f"""
+<div class="ex-modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="m-title" data-paypal="{e(PAYPALME)}" data-email="{e(ORDER_EMAIL)}">
+  <div class="ex-dialog">
+    <button class="ex-close" id="m-close" aria-label="Close">×</button>
+    <div class="ex-dialog-grid">
+      <div><div class="ex-main-img"><img id="m-img" alt=""></div></div>
+      <div>
+        <p class="eyebrow" id="m-cat"></p>
+        <h2 class="gold" id="m-title"></h2>
+        <div class="ex-price gold" id="m-price"></div>
+        <p class="ex-stock">{e(DELIVERY)}</p>
+        <div class="ex-buy">
+          <a class="btn btn-gold" id="m-paypal" target="_blank" rel="noopener">Pay with PayPal</a>
+          <a class="btn" id="m-email">Order by email</a>
+        </div>
+        <ol class="ex-howto">
+          <li>Tap <b>Pay with PayPal</b>. The price (<span id="m-price2"></span>) is filled in for you.</li>
+          <li>In the PayPal note, write the product name or ref <b id="m-ref"></b>, any size or colour, and your delivery address.</li>
+          <li>We'll email you to confirm and send your order discreetly.</li>
+          <li>Prefer not to use PayPal? Tap <b>Order by email</b> and we'll reply with other ways to pay.</li>
+        </ol>
+        <p class="ws-more"><a class="gold" id="m-ebay" target="_blank" rel="noopener">See full description and photos on eBay</a></p>
+      </div>
+    </div>
+  </div>
+</div>"""
+    foot = FOOT.split("<script>")[0].replace('{catlinks}', cat_footer()).replace('{ebay}', EBAY_SHOP).replace('{year}', str(year))
+    os.makedirs(os.path.join(ROOT, slug), exist_ok=True)
+    open(os.path.join(ROOT, slug, "index.html"), "w", encoding="utf-8").write(head + body + foot + SHOP_JS)
+    print(f"/{slug}/  {len(items)} products")
+
+build_shop(True)
+build_shop(False)
+
 # sitemap + robots
 today = datetime.date.today().isoformat()
-urls = [SITE+"/", SITE+"/masturbators-and-dildos/", SITE+"/home-parties/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
+urls = [SITE+"/", SITE+"/shop/", SITE+"/ebay-shop/", SITE+"/masturbators-and-dildos/", SITE+"/home-parties/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
 # brand images listed for the homepage so Google can show them under the result
 HOME_IMAGES = ["ig-welcome","ig-lingerie","ig-new-in","ig-link-in-bio","ig-shop-with-us"]
 def img_tags(u):
@@ -304,3 +477,4 @@ sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps
 open(os.path.join(ROOT, "sitemap.xml"), "w").write(sm)
 open(os.path.join(ROOT, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: {SITE}/sitemap.xml\n")
 print("sitemap.xml + robots.txt written")
+
