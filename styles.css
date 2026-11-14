@@ -526,3 +526,49 @@ nav.links{gap:18px}nav.links a{letter-spacing:.16em}
 
 /* make room for Website Shop + eBay Shop in the header; Our Story stays in the footer */
 header.site .links a[href="/#story"]{display:none}
+
+/* ---------- Three equal collections (homepage) ---------- */
+.three{padding:80px 0 90px;border-top:1px solid var(--gold-faint);
+  background:radial-gradient(60% 50% at 50% 0%,rgba(122,52,196,.28) 0%,transparent 70%),var(--night)}
+.three-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.three-card{display:flex;flex-direction:column;text-decoration:none;color:inherit;
+  border:1px solid var(--gold-line);background:linear-gradient(180deg,var(--plum),var(--black));
+  transition:transform .2s,box-shadow .2s,border-color .2s}
+.three-card:hover{transform:translateY(-4px);border-color:var(--gold);box-shadow:0 18px 40px -18px rgba(122,52,196,.7)}
+.three-card img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block}
+.three-body{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:20px 18px 24px;flex:1}
+.three-num{font-size:.72rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-hi)}
+.three-text{color:var(--cream-soft);font-size:.9rem;flex:1}
+@media (max-width:860px){.three-grid{grid-template-columns:1fr;max-width:460px;margin:0 auto}}
+
+/* ---------- Bigger category pages (lingerie, beauty) ---------- */
+.cat-hero-split{text-align:left}
+.cat-hero-split .cat-hero-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+.cat-hero-split .cat-intro{margin:0;max-width:none}
+.cat-hero-split .star-rule{justify-content:flex-start;margin-left:0}
+.cat-hero-img{width:100%;max-width:380px;justify-self:end;height:auto;border:1px solid var(--gold-line)}
+@media (max-width:860px){.cat-hero-split{text-align:center}.cat-hero-split .cat-hero-grid{grid-template-columns:1fr}
+  .cat-hero-split .star-rule{justify-content:center}.cat-hero-img{justify-self:center;max-width:300px}}
+.cat-extra{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px;text-align:left}
+.cat-extra-item{border:1px solid var(--gold-faint);padding:18px 20px;background:rgba(26,12,36,.55)}
+.cat-extra-item h3{font-size:.95rem;letter-spacing:.12em;margin-bottom:8px}
+.cat-extra-item p{color:var(--cream-soft);font-size:.88rem;margin:0}
+@media (max-width:860px){.cat-extra{grid-template-columns:1fr}}
+.type-chips{margin-top:-8px}
+.adult-note{text-align:center;color:var(--muted);font-size:.85rem;margin:-8px 0 22px}
+.adult-link{margin-top:14px;font-size:.78rem;color:var(--muted)}
+.adult-link a{color:var(--cream-soft)}
+
+/* ---------- 18+ section ---------- */
+body.adult-locked main,body.adult-locked .ex-modal{display:none}
+.adult-group{margin-top:56px;scroll-margin-top:90px}
+#exclusives{scroll-margin-top:90px}
+
+/* ---------- Smaller screens: menu becomes a swipeable row under the logo ---------- */
+@media (max-width:1250px){
+  .nav{flex-wrap:wrap;height:auto;padding-top:12px;row-gap:6px}
+  nav.links{display:flex;order:3;flex:none;width:100%;margin:0;justify-content:flex-start;gap:22px;overflow-x:auto;white-space:nowrap;
+    padding:4px 0 12px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav.links::-webkit-scrollbar{display:none}
+  nav.links a{font-size:.66rem;letter-spacing:.18em;flex:0 0 auto}
+}
