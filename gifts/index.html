@@ -36,15 +36,15 @@
   <div class="wrap nav">
     <a class="brand" href="/" aria-label="Love and Beauty Limited, home"><img src="/images/logo-small.png" alt=""><span>LOVE AND BEAUTY<small>LIMITED</small></span></a>
     <nav class="links" aria-label="Main">
-      <a class="nav-toys" href="/sex-toys/">Sex Toys</a>
-      <a href="/masturbators-and-dildos/">Masturbators &amp; Dildos</a>
       <a href="/lingerie/">Lingerie</a>
+      <a href="/beauty/">Beauty</a>
+      <a href="/sex-toys/">Sexual Wellness</a>
       <a href="/home-parties/">Home Parties</a>
       <a href="/#story">Our Story</a>
       <a class="nav-shop" href="/shop/">Website Shop</a>
       <a class="nav-ebay" href="/ebay-shop/">eBay Shop</a>
     </nav>
-    <a class="btn btn-gold" href="/sex-toys/">Shop Sex Toys</a>
+    <a class="btn btn-gold" href="/shop/">Shop Now</a>
   </div>
 </header>
 
@@ -52,10 +52,16 @@
 <section class="cat-hero">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a> <span>›</span> Gifts &amp; Calendars</nav>
-    <p class="eyebrow">Love and Beauty · Gifts &amp; Calendars</p>
-    <h1 class="gold">GIFTS &amp; ADVENT CALENDARS</h1>
-    <div class="star-rule"><svg><use href="#star"/></svg></div>
-    <div class="cat-intro"><p>Adult advent calendars, couples gift sets, starter kits and novelty gifts, perfect for birthdays, anniversaries and Christmas.</p><p>Sent in plain packaging from Rotherham, South Yorkshire.</p></div>
+    <div class="cat-hero-grid">
+      <div>
+        <p class="eyebrow">Love and Beauty · Gifts &amp; Calendars</p>
+        <h1 class="gold">GIFTS &amp; ADVENT CALENDARS</h1>
+        <div class="star-rule"><svg><use href="#star"/></svg></div>
+        <div class="cat-intro"><p>Adult advent calendars, couples gift sets, starter kits and novelty gifts, perfect for birthdays, anniversaries and Christmas.</p><p>Sent in plain packaging from Rotherham, South Yorkshire.</p></div>
+      </div>
+      
+    </div>
+    
   </div>
 </section>
 <section class="shop cat-shop">
@@ -76,7 +82,7 @@
 </main>
 <footer>
   <div class="wrap">
-    <div class="cat-links"><p class="eyebrow">Shop by category</p><div class="cat-links-row"><a href="/sex-toys/">Sex Toys</a><a href="/masturbators-and-dildos/">Male Masturbators &amp; Realistic Dildos</a><a href="/vibrators/">Vibrators &amp; Massagers</a><a href="/dildos/">Realistic Toys &amp; Dildos</a><a href="/anal-toys/">Anal Play</a><a href="/cock-rings/">Cock Rings &amp; Enhancers</a><a href="/male-sex-toys/">Toys for Him</a><a href="/lingerie/">Lingerie</a><a href="/bondage/">Bondage &amp; Restraints</a><a href="/fetishwear/">Fetish &amp; Clubwear</a><a href="/lubricants/">Lubes &amp; Intimate Care</a><a href="/gifts/">Gifts &amp; Calendars</a><a href="/beauty/">Beauty</a></div></div>
+    <div class="cat-links"><p class="eyebrow">Shop by category</p><div class="cat-links-row"><a href="/sex-toys/">Sexual Wellness</a><a href="/vibrators/">Vibrators &amp; Massagers</a><a href="/anal-toys/">Anal Play</a><a href="/cock-rings/">Cock Rings &amp; Enhancers</a><a href="/male-sex-toys/">Toys for Him</a><a href="/lingerie/">Lingerie</a><a href="/bondage/">Bondage &amp; Restraints</a><a href="/fetishwear/">Fetish &amp; Clubwear</a><a href="/lubricants/">Lubes &amp; Intimate Care</a><a href="/gifts/">Gifts &amp; Calendars</a><a href="/beauty/">Beauty &amp; Self-Care</a></div><p class="adult-link">Adults only: <a href="/masturbators-and-dildos/">Male Masturbators &amp; Realistic Dildos (18+)</a></p></div>
     <img src="/images/logo-small.png" alt="">
     <div class="name gold">LOVE AND BEAUTY LIMITED</div>
     <div class="star-rule"><svg><use href="#star"/></svg></div>
@@ -91,12 +97,18 @@
   document.getElementById('gate-enter').addEventListener('click',function(){gate.hidden=true;try{localStorage.setItem('lb_age_ok','1');}catch(e){}});
   var grid=document.getElementById('grid'); if(!grid) return;
   var cards=[].slice.call(grid.children), q=document.getElementById('search'), s=document.getElementById('sort'), c=document.getElementById('count');
+  var rx=null, types=document.getElementById('types');
+  if(types) types.addEventListener('click',function(ev){
+    var b=ev.target.closest('button'); if(!b) return;
+    [].forEach.call(types.children,function(x){x.setAttribute('aria-pressed',x===b);});
+    rx=b.dataset.rx?new RegExp(b.dataset.rx,'i'):null; apply();
+  });
   function apply(){
     var t=(q.value||'').toLowerCase().trim(), shown=0;
     var list=cards.slice();
     if(s.value==='low') list.sort(function(a,b){return a.dataset.price-b.dataset.price;});
     if(s.value==='high') list.sort(function(a,b){return b.dataset.price-a.dataset.price;});
-    list.forEach(function(el){ var ok=!t||el.dataset.t.indexOf(t)>-1; el.hidden=!ok; if(ok) shown++; grid.appendChild(el); });
+    list.forEach(function(el){ var ok=(!t||el.dataset.t.indexOf(t)>-1)&&(!rx||rx.test(el.dataset.t)); el.hidden=!ok; if(ok) shown++; grid.appendChild(el); });
     c.textContent=shown+(shown===1?' product':' products');
     document.getElementById('empty').hidden=shown>0;
   }
