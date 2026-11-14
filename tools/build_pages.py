@@ -15,13 +15,23 @@ src = open(os.path.join(ROOT, "products.js"), encoding="utf-8").read()
 PRODUCTS = json.loads(re.search(r"LB_PRODUCTS = (\[.*\]);", src, re.S).group(1))
 UPDATED = re.search(r'LB_UPDATED = "([^"]+)"', src).group(1)
 
+# Explicit items (male masturbators/strokers and all realistic toys & dildos) are kept off the
+# main site and only shown on the separate 18+ page /masturbators-and-dildos/.
+# The same rule is used in index.html (ADULT_RE) - keep the two in step.
+ADULT_RE = re.compile(r"masturbat|stroker|fleshlight|onahole|tenga|blowtech|pocket pal|aliens pie|streetgirl|launch", re.I)
+def is_adult(p):
+    return p["c"] == "realistic" or (p["c"] == "him" and bool(ADULT_RE.search(p["t"])))
+ALL_PRODUCTS = PRODUCTS
+ADULT = [p for p in ALL_PRODUCTS if is_adult(p)]
+PRODUCTS = [p for p in ALL_PRODUCTS if not is_adult(p)]
+
 # slug, sub-categories, nav name, page title, H1, meta description, intro paragraphs
 PAGES = [
-  dict(slug="sex-toys", subs=["vibes","realistic","anal","rings","him"], name="Sex Toys",
-       title="Sex Toys UK | Vibrators, Dildos, Anal Toys & More | Love and Beauty",
-       h1="SEX TOYS",
-       desc="Shop {n} sex toys from LELO, Satisfyer, CalExotics, Rocks-Off and more. Vibrators, realistic dildos, anal toys, cock rings and toys for him. Discreet UK delivery from Rotherham.",
-       intro=["Our full sex toy collection in one place: vibrators and massagers, realistic toys and dildos, anal play, cock rings and enhancers, and toys for him. We stock trusted brands including LELO, Satisfyer, CalExotics, Rocks-Off, Doc Johnson and ToyJoy.",
+  dict(slug="sex-toys", subs=["vibes","anal","rings","him"], order=["vibes","vibes","vibes","rings","vibes","anal","vibes","him"], name="Sexual Wellness",
+       title="Sex Toys & Sexual Wellness UK | Vibrators, Massagers & More | Love and Beauty",
+       h1="SEXUAL WELLNESS",
+       desc="Shop {n} sexual wellness products and sex toys from LELO, Satisfyer, CalExotics, Rocks-Off and more: vibrators and massagers, anal play, couples rings and toys for him. Discreet UK delivery from Rotherham.",
+       intro=["Our sexual wellness collection: vibrators and massagers, anal play, cock rings and couples enhancers, and toys for him, from trusted brands including LELO, Satisfyer, CalExotics, Rocks-Off and ToyJoy.",
               "Love and Beauty Limited is a family-run business in Rotherham, South Yorkshire. Every order is packed by hand and sent in plain, unbranded packaging, with secure checkout through our eBay shop."]),
   dict(slug="vibrators", subs=["vibes"], name="Vibrators & Massagers",
        title="Vibrators & Massagers UK | Rabbit, Wand & Clitoral Vibrators | Love and Beauty",
@@ -29,12 +39,6 @@ PAGES = [
        desc="Shop {n} vibrators and massagers: rabbit vibrators, wand massagers, clitoral suction toys, G-spot vibrators, bullets and love eggs from LELO, Satisfyer and more. Discreet UK delivery.",
        intro=["Rabbit vibrators, wand massagers, air-pulse clitoral stimulators, G-spot vibrators, bullets, finger vibes and remote-control love eggs, from LELO, Satisfyer, Le Wand, CalExotics, Rocks-Off, Love to Love and more.",
               "Most are rechargeable, body-safe silicone and waterproof. All orders are sent discreetly from Rotherham, South Yorkshire."]),
-  dict(slug="dildos", subs=["realistic"], name="Realistic Toys & Dildos",
-       title="Dildos & Realistic Sex Toys UK | Strap-Ons & Glass Dildos | Love and Beauty",
-       h1="REALISTIC TOYS & DILDOS",
-       desc="Shop {n} dildos and realistic sex toys: suction cup dildos, vibrating realistic toys, glass and steel dildos, strap-on harnesses and Clone-A-Willy kits. Discreet UK delivery.",
-       intro=["Realistic dildos and vibrators, suction-cup dildos, glass and stainless steel wands, strap-on harnesses and DIY moulding kits from Doc Johnson, Pipedream, Strap-on-me, Le Wand, Clone-A-Willy and more.",
-              "Sent in plain packaging from our family-run business in Rotherham, South Yorkshire."]),
   dict(slug="anal-toys", subs=["anal"], name="Anal Play",
        title="Anal Toys UK | Butt Plugs, Anal Beads & Prostate Massagers | Love and Beauty",
        h1="ANAL PLAY",
@@ -48,17 +52,24 @@ PAGES = [
        intro=["Vibrating cock rings, rechargeable couples enhancers, stretchy ring sets and ball stretchers from Hot Octopuss, CalExotics, Rocks-Off, ToyJoy and more.",
               "Sent in plain packaging from our family-run business in Rotherham, South Yorkshire."]),
   dict(slug="male-sex-toys", subs=["him"], name="Toys for Him",
-       title="Male Sex Toys UK | Masturbators, Strokers & Penis Pumps | Love and Beauty",
+       title="Toys for Him UK | Penis Pumps, Extenders & Chastity | Love and Beauty",
        h1="TOYS FOR HIM",
-       desc="Shop {n} male sex toys: Fleshlight, Tenga and UltraSkyn strokers, automatic masturbators, penis pumps, extenders and chastity devices. Discreet UK delivery.",
-       intro=["Male masturbators and strokers from Fleshlight, Tenga and Doc Johnson, automatic and thrusting toys, penis pumps, extenders and chastity devices.",
+       desc="Shop {n} products for him: penis pumps, extenders, chastity devices and massagers from CalExotics, Pumped, MaleEdge and more. Discreet UK delivery.",
+       intro=["Penis pumps, extenders, chastity devices and massagers for him from CalExotics, Pumped, MaleEdge, ManCage and more.",
               "Every order is sent in plain, unbranded packaging from Rotherham, South Yorkshire."]),
-  dict(slug="lingerie", subs=["lingerie"], name="Lingerie",
-       title="Sexy Lingerie UK | Bodies, Basques & Bra Sets | Love and Beauty",
+  dict(slug="lingerie", subs=["lingerie","clubwear"], name="Lingerie", img="lingerie.jpg",
+       filters=[("Bra Sets", r"\bbra\b|bralette"), ("Basques & Corsets", r"basque|corset|bustier"),
+                ("Bodies & Teddies", r"\bbody\b|bodysuit|teddy|catsuit"), ("Babydolls & Chemises", r"babydoll|chemise|slip\b|negligee"),
+                ("Stockings & Suspenders", r"stocking|suspender|garter|tights|hold.?ups"), ("Plus Size", r"plus size|curves|queen|xl-|3xl|4xl"),
+                ("Dresses & Clubwear", r"dress|skirt|wet ?look|vinyl|latex|clubwear|jumpsuit")],
+       title="Lingerie UK | Bra Sets, Basques, Bodies & Stockings | Love and Beauty",
        h1="LINGERIE",
-       desc="Shop {n} lingerie pieces: lace bra sets, basques, bodies, teddies, stockings and suspenders from Cottelli, Leg Avenue, Abierta Fina and more, including plus sizes. UK delivery.",
-       intro=["Lace bra and thong sets, basques and corsets, bodies and teddies, stockings and suspender belts from Cottelli, Leg Avenue, Abierta Fina, Amorable by Rimba, Le Desir and more, including plus sizes.",
-              "Silk, lace and quiet confidence, sent discreetly from Rotherham, South Yorkshire."]),
+       desc="Shop {n} lingerie and clubwear pieces: lace bra sets, basques and corsets, bodies, babydolls, stockings and suspenders, dresses and wet look clubwear from Cottelli, Leg Avenue, Abierta Fina, Noir Handmade and more, including plus sizes. UK delivery.",
+       intro=["Silk, lace and quiet confidence. Lace bra and thong sets, basques and corsets, bodies and teddies, babydolls, stockings and suspender belts, plus dresses and wet look clubwear for a night out.",
+              "We stock Cottelli, Leg Avenue, Abierta Fina, Amorable by Rimba, Le Desir, Noir Handmade and Black Level, in sizes from S to 4XL. Every order is wrapped with care and sent discreetly from Rotherham, South Yorkshire."],
+       extra=[("Sizes S to 4XL", "Most sets come in several sizes and many are available in plus sizes. If you're between sizes, email us and we'll help."),
+              ("Gift-ready", "Buying for someone else? Every order is packed in plain, unbranded packaging, ready to give."),
+              ("Real stock, ready to send", "Everything you see is in our Rotherham stock room and dispatched quickly.")]),
   dict(slug="bondage", subs=["bondage"], name="Bondage & Restraints",
        title="Bondage Gear UK | Cuffs, Collars, Floggers & Restraints | Love and Beauty",
        h1="BONDAGE & RESTRAINTS",
@@ -83,17 +94,25 @@ PAGES = [
        desc="Shop {n} adult gifts: 2026 adult advent calendars with Womanizer and We-Vibe, couples gift sets and starter kits. Discreet UK delivery.",
        intro=["Adult advent calendars, couples gift sets, starter kits and novelty gifts, perfect for birthdays, anniversaries and Christmas.",
               "Sent in plain packaging from Rotherham, South Yorkshire."]),
-  dict(slug="beauty", subs=["beauty"], name="Beauty",
-       title="Beauty & Skincare | Face Cloths & Cleansing Pads | Love and Beauty",
-       h1="BEAUTY",
-       desc="Shop beauty and skincare from Love and Beauty Limited: face cleansing cloths, toner pads and paraffin wax. UK delivery.",
-       intro=["Little rituals, beautifully done: face cleansing cloths, toner pads and paraffin wax, with more beauty lines on the way."]),
+  dict(slug="beauty", subs=["beauty","lube"], name="Beauty & Self-Care", img="beauty.jpg",
+       pick=r"lamai|beauty|face|skin|kegel|pelvic|dilator|menstrual|geisha|love balls|ben wa|luna",
+       drop=r"vibrat|e-stim|electro|pleasure|thumping|motor|remote|krush",
+       filters=[("Skincare & Face Cloths", r"lamai|beauty|face|skin"), ("Pelvic Floor & Intimate Health", r"kegel|pelvic|dilator|menstrual|geisha|love balls|ben wa|luna")],
+       title="Beauty & Self-Care | Face Cloths, Skincare & Pelvic Floor Trainers | Love and Beauty",
+       h1="BEAUTY & SELF-CARE",
+       desc="Shop beauty and self-care from Love and Beauty Limited: soft face cleansing cloths, compressed travel face towels, and pelvic floor and kegel trainers from LELO and more. Trade supply for beauty salons. UK delivery.",
+       intro=["Little rituals, beautifully done. Soft, biodegradable face cleansing cloths and compressed travel towels from Lamai Beauty, alongside pelvic floor trainers and intimate health products from LELO, CalExotics and more.",
+              "As well as customers at home, we supply beauty salons, and we're adding new skincare lines all the time."],
+       extra=[("For beauty salons", "We supply salons with face cloths and treatment essentials at trade prices. Email sales@loveandbeautysales.co.uk with what you need and roughly how many, and we'll send you a quote."),
+              ("Gentle on skin", "Our Lamai cloths are ultra soft, wet or dry, and biodegradable, made for everyday cleansing and make-up removal."),
+              ("Pelvic floor health", "Kegel balls and pelvic floor trainers are designed to help you exercise and strengthen your pelvic floor. Body-safe silicone, sent discreetly.")]),
 ]
 SUBNAME = {"vibes":"Vibrators & Massagers","realistic":"Realistic Toys & Dildos","anal":"Anal Play",
   "rings":"Cock Rings & Enhancers","him":"Toys for Him","lingerie":"Lingerie","bondage":"Bondage & Restraints",
   "clubwear":"Fetish & Clubwear","menswear":"Men's Underwear & Harnesses","lube":"Lubricants & Intimate Care",
   "gifts":"Gifts & Calendars","beauty":"Beauty"}
-SUBPAGE = {"vibes":"vibrators","realistic":"dildos","anal":"anal-toys","rings":"cock-rings","him":"male-sex-toys"}
+ADULT_PAGE = "/masturbators-and-dildos/"
+SUBPAGE = {"vibes":"vibrators","anal":"anal-toys","rings":"cock-rings","him":"male-sex-toys"}
 BRANDS = ["LELO","Satisfyer","CalExotics","Calextics","Rocks-Off","Doc Johnson","ToyJoy","Pipedream","Le Wand","Fleshlight","Tenga",
   "Hot Octopuss","b-Vibe","Womanizer","Magic Shiver","Rimba","Amorable","Cottelli","Leg Avenue","Abierta Fina","Le Desir","Noir Handmade",
   "Black Level","Svenjoyment","NEK","Rouge","Ouch!","Love to Love","Pretty Love","VIVE","Vive","Dream Toys","Dreamtoys","Xocoon","Shots",
@@ -119,13 +138,13 @@ def card(p):
             f'<a class="btn btn-gold buy" href="{url}" target="_blank" rel="noopener">Buy on eBay</a></div></div></article>')
 
 def nav_links(active):
-    items = [("sex-toys","Sex Toys")] + [(SUBPAGE[s], SUBNAME[s]) for s in ["vibes","realistic","anal","rings","him"]]
+    items = [("sex-toys","All Sexual Wellness")] + [(SUBPAGE[s], SUBNAME[s]) for s in ["vibes","anal","rings","him"]]
     return items
 
 def cat_footer():
     links = "".join(f'<a href="/{p["slug"]}/">{e(p["name"])}</a>' for p in PAGES)
-    links = links.replace('Sex Toys</a>', 'Sex Toys</a><a href="/masturbators-and-dildos/">Male Masturbators &amp; Realistic Dildos</a>', 1)
-    return f'<div class="cat-links"><p class="eyebrow">Shop by category</p><div class="cat-links-row">{links}</div></div>'
+    return (f'<div class="cat-links"><p class="eyebrow">Shop by category</p><div class="cat-links-row">{links}</div>'
+            f'<p class="adult-link">Adults only: <a href="{ADULT_PAGE}">Male Masturbators &amp; Realistic Dildos (18+)</a></p></div>')
 
 HEAD = """<!doctype html>
 <html lang="en-GB">
@@ -165,15 +184,15 @@ HEAD = """<!doctype html>
   <div class="wrap nav">
     <a class="brand" href="/" aria-label="Love and Beauty Limited, home"><img src="/images/logo-small.png" alt=""><span>LOVE AND BEAUTY<small>LIMITED</small></span></a>
     <nav class="links" aria-label="Main">
-      <a class="nav-toys" href="/sex-toys/">Sex Toys</a>
-      <a href="/masturbators-and-dildos/">Masturbators &amp; Dildos</a>
       <a href="/lingerie/">Lingerie</a>
+      <a href="/beauty/">Beauty</a>
+      <a href="/sex-toys/">Sexual Wellness</a>
       <a href="/home-parties/">Home Parties</a>
       <a href="/#story">Our Story</a>
       <a class="nav-shop" href="/shop/">Website Shop</a>
       <a class="nav-ebay" href="/ebay-shop/">eBay Shop</a>
     </nav>
-    <a class="btn btn-gold" href="/sex-toys/">Shop Sex Toys</a>
+    <a class="btn btn-gold" href="/shop/">Shop Now</a>
   </div>
 </header>
 """
@@ -196,12 +215,18 @@ FOOT = """
   document.getElementById('gate-enter').addEventListener('click',function(){gate.hidden=true;try{localStorage.setItem('lb_age_ok','1');}catch(e){}});
   var grid=document.getElementById('grid'); if(!grid) return;
   var cards=[].slice.call(grid.children), q=document.getElementById('search'), s=document.getElementById('sort'), c=document.getElementById('count');
+  var rx=null, types=document.getElementById('types');
+  if(types) types.addEventListener('click',function(ev){
+    var b=ev.target.closest('button'); if(!b) return;
+    [].forEach.call(types.children,function(x){x.setAttribute('aria-pressed',x===b);});
+    rx=b.dataset.rx?new RegExp(b.dataset.rx,'i'):null; apply();
+  });
   function apply(){
     var t=(q.value||'').toLowerCase().trim(), shown=0;
     var list=cards.slice();
     if(s.value==='low') list.sort(function(a,b){return a.dataset.price-b.dataset.price;});
     if(s.value==='high') list.sort(function(a,b){return b.dataset.price-a.dataset.price;});
-    list.forEach(function(el){ var ok=!t||el.dataset.t.indexOf(t)>-1; el.hidden=!ok; if(ok) shown++; grid.appendChild(el); });
+    list.forEach(function(el){ var ok=(!t||el.dataset.t.indexOf(t)>-1)&&(!rx||rx.test(el.dataset.t)); el.hidden=!ok; if(ok) shown++; grid.appendChild(el); });
     c.textContent=shown+(shown===1?' product':' products');
     document.getElementById('empty').hidden=shown>0;
   }
@@ -214,8 +239,8 @@ FOOT = """
 
 def jsonld(page, items, canon):
     crumbs = [{"@type":"ListItem","position":1,"name":"Home","item":SITE+"/"}]
-    if page["slug"] != "sex-toys" and set(page["subs"]) <= {"vibes","realistic","anal","rings","him"}:
-        crumbs.append({"@type":"ListItem","position":2,"name":"Sex Toys","item":SITE+"/sex-toys/"})
+    if page["slug"] != "sex-toys" and set(page["subs"]) <= {"vibes","anal","rings","him"}:
+        crumbs.append({"@type":"ListItem","position":2,"name":"Sexual Wellness","item":SITE+"/sex-toys/"})
     crumbs.append({"@type":"ListItem","position":len(crumbs)+1,"name":page["name"],"item":canon})
     products = []
     for n, p in enumerate(items, 1):
@@ -245,30 +270,58 @@ def ordered(subs):
 
 year = datetime.date.today().year
 for page in PAGES:
-    items = ordered(page["subs"])
+    items = ordered(page.get("order") or page["subs"])
+    if page.get("pick"):
+        items = [p for p in items if re.search(page["pick"], p["t"], re.I)]
+        items.sort(key=lambda p: p["c"] != "beauty")   # skincare first
+    if page.get("drop"):
+        items = [p for p in items if not re.search(page["drop"], p["t"], re.I)]
     if not items: continue
     canon = f"{SITE}/{page['slug']}/"
     desc = page["desc"].format(n=len(items))
     head = HEAD.format(title=e(page["title"]), desc=e(desc), canon=canon, site=SITE, ebay=EBAY_SHOP, jsonld=jsonld(page, items, canon))
     crumb = '<a href="/">Home</a>'
-    if page["slug"] != "sex-toys" and set(page["subs"]) <= {"vibes","realistic","anal","rings","him"}:
-        crumb += ' <span>›</span> <a href="/sex-toys/">Sex Toys</a>'
+    if page["slug"] != "sex-toys" and set(page["subs"]) <= {"vibes","anal","rings","him"}:
+        crumb += ' <span>›</span> <a href="/sex-toys/">Sexual Wellness</a>'
     crumb += f' <span>›</span> {e(page["name"])}'
     subnav = ""
     if page["slug"] == "sex-toys" or page["subs"][0] in SUBPAGE:
         subnav = '<div class="chips static-chips">' + "".join(
             f'<a class="chip" href="/{slug}/" aria-pressed="{"true" if slug==page["slug"] else "false"}">{e(nm)}</a>'
             for slug, nm in nav_links(page["slug"])) + '</div>'
+    if page.get("filters"):
+        fl = [(lab, rx, sum(1 for p in items if re.search(rx, p["t"], re.I))) for lab, rx in page["filters"]]
+        subnav += ('<div class="chips type-chips" id="types"><button type="button" class="chip" aria-pressed="true" data-rx="">All <b>'
+                   + str(len(items)) + '</b></button>' + "".join(
+                   f'<button type="button" class="chip" aria-pressed="false" data-rx="{e(rx)}">{e(lab)} <b>{n}</b></button>'
+                   for lab, rx, n in fl if n) + '</div>')
+    if page["slug"] == "sex-toys":
+        subnav += (f'<p class="adult-note">Looking for male masturbators or realistic dildos? They are in our separate '
+                   f'<a class="gold" href="{ADULT_PAGE}">adults-only section (18+)</a>.</p>')
     intro = "".join(f"<p>{e(t)}</p>" for t in page["intro"])
+    extra = ""
+    if page.get("extra"):
+        extra = '<div class="cat-extra">' + "".join(f'<div class="cat-extra-item"><h3 class="gold">{e(h)}</h3><p>{e(t)}</p></div>' for h, t in page["extra"]) + '</div>'
+    if page.get("img"):
+        hero_cls = "cat-hero cat-hero-split"
+        hero_img = f'<img class="cat-hero-img" src="/images/{page["img"]}" alt="{e(page["name"])} collection, Love and Beauty" width="1080" height="1350">'
+    else:
+        hero_cls, hero_img = "cat-hero", ""
     body = f"""
 <main>
-<section class="cat-hero">
+<section class="{hero_cls}">
   <div class="wrap">
     <nav class="crumbs" aria-label="Breadcrumb">{crumb}</nav>
-    <p class="eyebrow">Love and Beauty · {e(page['name'])}</p>
-    <h1 class="gold">{e(page['h1'])}</h1>
-    <div class="star-rule"><svg><use href="#star"/></svg></div>
-    <div class="cat-intro">{intro}</div>
+    <div class="cat-hero-grid">
+      <div>
+        <p class="eyebrow">Love and Beauty · {e(page['name'])}</p>
+        <h1 class="gold">{e(page['h1'])}</h1>
+        <div class="star-rule"><svg><use href="#star"/></svg></div>
+        <div class="cat-intro">{intro}</div>
+      </div>
+      {hero_img}
+    </div>
+    {extra}
   </div>
 </section>
 <section class="shop cat-shop">
@@ -304,7 +357,7 @@ SETTINGS = EX.get("settings", {})
 PAYPALME = re.sub(r"^https?://(www\.)?(paypal\.me|paypal\.com/paypalme)/", "", SETTINGS.get("paypalme","").strip(), flags=re.I).split("/")[0].lstrip("@")
 ORDER_EMAIL = SETTINGS.get("email") or "sales@loveandbeautysales.co.uk"
 DELIVERY = SETTINGS.get("delivery") or "Free UK delivery, in plain, discreet packaging."
-SHOP_ORDER = ["vibes","realistic","anal","rings","him","lingerie","bondage","clubwear","menswear","lube","gifts","beauty"]
+SHOP_ORDER = ["lingerie","beauty","vibes","anal","rings","him","clubwear","menswear","bondage","lube","gifts"]
 
 def site_price(p):
     if any(w in p["t"].lower() for w in NO_DISCOUNT): return p["p"]
@@ -382,13 +435,13 @@ def build_shop(direct):
     if direct:
         name, h1 = "Website Shop", "WEBSITE SHOP"
         title = "Shop Direct – 15% Off Every eBay Price | Love and Beauty"
-        desc = f"Buy direct from Love and Beauty and save 15% on our eBay prices across {len(items)} sex toys, lingerie and more. Pay by PayPal or order by email. Free discreet UK delivery."
+        desc = f"Buy direct from Love and Beauty and save 15% on our eBay prices across {len(items)} lingerie, beauty and sexual wellness products. Pay by PayPal or order by email. Free discreet UK delivery."
         intro = [f"Every product from our eBay shop, sold direct from our family-run business in Rotherham, South Yorkshire, and <b>15% cheaper than our eBay prices</b>.",
                  "Pay securely with PayPal, or send us an order by email and we'll reply with how to pay. " + e(DELIVERY)]
         note = f"Prices are 15% below our eBay prices (updated {e(UPDATED)}). Stock is shared with our eBay shop, so if an item has just sold out we'll let you know and refund you in full straight away. Adults 18+ only."
     else:
         name, h1 = "eBay Shop", "EBAY SHOP"
-        title = "Our eBay Shop – Sex Toys, Lingerie & More | Love and Beauty"
+        title = "Our eBay Shop – Lingerie, Beauty & Sexual Wellness | Love and Beauty"
         desc = f"Browse all {len(items)} products in the Love and Beauty eBay shop (loveandbeautyltd) and check out securely on eBay. Discreet UK delivery."
         intro = ["Our full eBay shop (<b>loveandbeautyltd</b>) in one place. Tap <em>Buy on eBay</em> to check out securely with eBay's buyer protection.",
                  'Want to save 15%? The same products are cheaper when you buy direct in our <a class="gold" href="/shop/">Website Shop</a>.']
@@ -464,9 +517,41 @@ def build_shop(direct):
 build_shop(True)
 build_shop(False)
 
+# /dildos/ moved into the 18+ section: leave a small page that forwards there
+os.makedirs(os.path.join(ROOT, "dildos"), exist_ok=True)
+open(os.path.join(ROOT, "dildos", "index.html"), "w", encoding="utf-8").write(
+    f'<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><title>Realistic Dildos | Love and Beauty</title>'
+    f'<meta name="robots" content="noindex"><link rel="canonical" href="{SITE}{ADULT_PAGE}">'
+    f'<meta http-equiv="refresh" content="0; url={ADULT_PAGE}#dildos"></head><body>'
+    f'<p>Realistic toys and dildos have moved to our <a href="{ADULT_PAGE}#dildos">adults-only section (18+)</a>.</p></body></html>')
+print("/dildos/  -> forwards to", ADULT_PAGE)
+
+# eBay explicit items go onto the 18+ page, between the ADULT-EBAY markers
+ap = os.path.join(ROOT, ADULT_PAGE.strip("/"), "index.html")
+ah = open(ap, encoding="utf-8").read()
+mast = [p for p in ADULT if p["c"] == "him"]
+dild = [p for p in ADULT if p["c"] == "realistic"]
+def adult_block(hid, title, items):
+    if not items: return ""
+    return (f'<div class="adult-group" id="{hid}"><div class="tools"><div><h2 class="gold cat-h2">{e(title)}</h2>'
+            f'<div class="count">{len(items)} products · buy on eBay</div></div></div>'
+            f'<div class="grid">{"".join(card(p) for p in items)}</div></div>')
+block = ("<!--ADULT-EBAY-START-->" + adult_block("masturbators", "Male Masturbators & Strokers", mast)
+         + adult_block("dildos", "Realistic Toys & Dildos", dild) + "<!--ADULT-EBAY-END-->")
+ah, n = re.subn(r"<!--ADULT-EBAY-START-->.*?<!--ADULT-EBAY-END-->", lambda m: block, ah, flags=re.S)
+assert n == 1, "ADULT-EBAY markers missing from " + ap
+open(ap, "w", encoding="utf-8").write(ah)
+print(f"{ADULT_PAGE}  {len(mast)} masturbators + {len(dild)} dildos from eBay")
+
+# hand-made pages share the same footer category links
+for hp in ["index.html", "home-parties/index.html", "masturbators-and-dildos/index.html"]:
+    fp = os.path.join(ROOT, hp); t = open(fp, encoding="utf-8").read()
+    t, n = re.subn(r"<!--CATLINKS-START-->.*?<!--CATLINKS-END-->", lambda m: "<!--CATLINKS-START-->" + cat_footer() + "<!--CATLINKS-END-->", t, flags=re.S)
+    if n: open(fp, "w", encoding="utf-8").write(t)
+
 # sitemap + robots
 today = datetime.date.today().isoformat()
-urls = [SITE+"/", SITE+"/shop/", SITE+"/ebay-shop/", SITE+"/masturbators-and-dildos/", SITE+"/home-parties/"] + [f"{SITE}/{p['slug']}/" for p in PAGES]
+urls = [SITE+"/", SITE+"/shop/", SITE+"/ebay-shop/", SITE+"/home-parties/"]   # 18+ page is noindex, so not listed + [f"{SITE}/{p['slug']}/" for p in PAGES]  # /dildos/ now forwards to the 18+ page
 # brand images listed for the homepage so Google can show them under the result
 HOME_IMAGES = ["ig-welcome","ig-lingerie","ig-new-in","ig-link-in-bio","ig-shop-with-us"]
 def img_tags(u):
