@@ -137,6 +137,14 @@ def card(p):
             f'<div class="foot"><span class="price gold">£{p["p"]:.2f}</span>'
             f'<a class="btn btn-gold buy" href="{url}" target="_blank" rel="noopener">Buy on eBay</a></div></div></article>')
 
+SOLD_OUT = '<span class="btn soldout" aria-disabled="true">Sold out – restocking soon</span>'
+def _sold_out(h):
+    h = re.sub(r'<a class="btn btn-gold buy[^"]*"[^>]*>[^<]*</a>', SOLD_OUT, h)
+    return h.replace('class="img ws-open"', 'class="img"')
+_card = card
+def card(p):
+    return _sold_out(_card(p)) if p.get("oos") else _card(p)
+
 def nav_links(active):
     items = [("sex-toys","All Sexual Wellness")] + [(SUBPAGE[s], SUBNAME[s]) for s in ["vibes","anal","rings","him"]]
     return items
@@ -380,6 +388,10 @@ def shop_card(p, direct):
             f'<a class="img" href="{ebay}" target="_blank" rel="noopener"><img src="{img}" alt="{e(p["t"])}" loading="lazy" width="500" height="500"></a>'
             f'<div class="body"><div class="cat">{e(SUBNAME[p["c"]])}</div><h4>{e(p["t"])}</h4>'
             f'<div class="foot"><span class="price gold">£{p["p"]:.2f}</span><a class="btn btn-gold buy" href="{ebay}" target="_blank" rel="noopener">Buy on eBay</a></div></div></article>')
+
+_shop_card = shop_card
+def shop_card(p, direct):
+    return _sold_out(_shop_card(p, direct)) if p.get("oos") else _shop_card(p, direct)
 
 SHOP_JS = """
 <script>
