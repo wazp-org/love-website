@@ -27,7 +27,7 @@ PRODUCTS = [p for p in ALL_PRODUCTS if not is_adult(p)]
 
 # slug, sub-categories, nav name, page title, H1, meta description, intro paragraphs
 PAGES = [
-  dict(slug="sex-toys", subs=["vibes","anal","rings","him"], order=["vibes","vibes","vibes","rings","vibes","anal","vibes","him"], name="Sexual Wellness",
+  dict(slug="sex-toys", price_desc=True, subs=["vibes","anal","rings","him"], order=["vibes","vibes","vibes","rings","vibes","anal","vibes","him"], name="Sexual Wellness",
        title="Sex Toys & Sexual Wellness UK | Vibrators, Massagers & More | Love and Beauty",
        h1="SEXUAL WELLNESS",
        desc="Shop {n} sexual wellness products and sex toys from LELO, Satisfyer, CalExotics, Rocks-Off and more: vibrators and massagers, anal play, couples rings and toys for him. Discreet UK delivery from Rotherham.",
@@ -57,7 +57,7 @@ PAGES = [
        desc="Shop {n} products for him: penis pumps, extenders, chastity devices and massagers from CalExotics, Pumped, MaleEdge and more. Discreet UK delivery.",
        intro=["Penis pumps, extenders, chastity devices and massagers for him from CalExotics, Pumped, MaleEdge, ManCage and more.",
               "Every order is sent in plain, unbranded packaging from Rotherham, South Yorkshire."]),
-  dict(slug="lingerie", subs=["lingerie","clubwear"], name="Lingerie", img="lingerie.jpg",
+  dict(slug="lingerie", price_desc=True, subs=["lingerie","clubwear"], name="Lingerie", img="lingerie.jpg",
        filters=[("Bra Sets", r"\bbra\b|bralette"), ("Basques & Corsets", r"basque|corset|bustier"),
                 ("Bodies & Teddies", r"\bbody\b|bodysuit|teddy|catsuit"), ("Babydolls & Chemises", r"babydoll|chemise|slip\b|negligee"),
                 ("Stockings & Suspenders", r"stocking|suspender|garter|tights|hold.?ups"), ("Plus Size", r"plus size|curves|queen|xl-|3xl|4xl"),
@@ -94,7 +94,7 @@ PAGES = [
        desc="Shop {n} adult gifts: 2026 adult advent calendars with Womanizer and We-Vibe, couples gift sets and starter kits. Discreet UK delivery.",
        intro=["Adult advent calendars, couples gift sets, starter kits and novelty gifts, perfect for birthdays, anniversaries and Christmas.",
               "Sent in plain packaging from Rotherham, South Yorkshire."]),
-  dict(slug="beauty", subs=["beauty","lube"], name="Beauty & Self-Care", img="beauty.jpg",
+  dict(slug="beauty", price_desc=True, subs=["beauty","lube"], name="Beauty & Self-Care", img="beauty.jpg",
        pick=r"lamai|beauty|face|skin|kegel|pelvic|dilator|menstrual|geisha|love balls|ben wa|luna",
        drop=r"vibrat|e-stim|electro|pleasure|thumping|motor|remote|krush",
        filters=[("Skincare & Face Cloths", r"lamai|beauty|face|skin"), ("Pelvic Floor & Intimate Health", r"kegel|pelvic|dilator|menstrual|geisha|love balls|ben wa|luna")],
@@ -277,6 +277,8 @@ for page in PAGES:
     if page.get("drop"):
         items = [p for p in items if not re.search(page["drop"], p["t"], re.I)]
     if not items: continue
+    if page.get("price_desc"):
+        items.sort(key=lambda p: -p["p"])   # most expensive first
     canon = f"{SITE}/{page['slug']}/"
     desc = page["desc"].format(n=len(items))
     head = HEAD.format(title=e(page["title"]), desc=e(desc), canon=canon, site=SITE, ebay=EBAY_SHOP, jsonld=jsonld(page, items, canon))
@@ -331,7 +333,7 @@ for page in PAGES:
       <div><h2 class="gold cat-h2">{e(page['name'])}</h2><div class="count" id="count">{len(items)} products</div></div>
       <div class="tools-right">
         <input class="field-dark" id="search" type="search" placeholder="Search {e(page['name'].lower())}…" aria-label="Search">
-        <select class="field-dark" id="sort" aria-label="Sort"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
+        <select class="field-dark" id="sort" aria-label="Sort"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high"{" selected" if page.get("price_desc") else ""}>Price: high to low</option></select>
       </div>
     </div>
     <div class="grid" id="grid">{''.join(card(p) for p in items)}</div>
