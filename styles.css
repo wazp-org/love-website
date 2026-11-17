@@ -574,3 +574,9 @@ body.adult-locked main,body.adult-locked .ex-modal{display:none}
 }
 
 .btn.soldout{background:#2a2a2a;color:#bbb;border:1px solid #555;cursor:default;pointer-events:none}
+
+/* Shop by brand (Website Shop and eBay Shop pages) */
+.brand-bar{text-align:center;margin:6px 0 26px}
+.brand-bar .eyebrow{margin-bottom:12px}
+.brand-chips{margin-bottom:10px}
+.brand-more{font-size:13px;color:var(--muted);margin:0}
