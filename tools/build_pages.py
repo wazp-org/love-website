@@ -118,14 +118,18 @@ BRANDS = ["LELO","Satisfyer","CalExotics","Calextics","Rocks-Off","Doc Johnson",
   "Black Level","Svenjoyment","NEK","Rouge","Ouch!","Love to Love","Pretty Love","VIVE","Vive","Dream Toys","Dreamtoys","Xocoon","Shots",
   "Secret Kisses","NS Novelties","Nu Sensuelle","Pillow Talk","OhMiBod","Svakom","Kiiroo","Evolved","ElectraStim","Lovetoy","Dorcel",
   "Marc Dorcel","Strap-on-me","Sportsheets","Clone-A-Willy","Blush","Bad Kitty","Daring Intimates","Mapale","Taboom","Lamai","FemmeFunn",
-  "Je Joue","Gvibe","INYA","B Swish","Nasstoys","Master Series","WhipSmart","Pumped","MaleEdge","Man Cage","ManCage","Zado","Avanza","IntoYou"]
+  "Je Joue","Gvibe","INYA","B Swish","Nasstoys","Master Series","WhipSmart","Pumped","MaleEdge","Man Cage","ManCage","Zado","Avanza","IntoYou",
+  "Obsessive","XR Brands","Inmi","Wand Essentials","Clean Stream","Fetish Collection","S-Line","Lubido","Mystim","CB-X","Genuine CB-3000","OVO","Linx",
+  "Menzstuff","Adam & Eve","Loveline","She-E-O","Nexus","Magic Motion","Me You Us","MM Original","pjur","ID Free","ID Jelly","SKYN","Lovetoy"]
 
 e = lambda s: html.escape(str(s), quote=True)
 
 def brand_of(t):
     for b in sorted(BRANDS, key=len, reverse=True):
         if t.lower().startswith(b.lower()+" ") or t.lower().startswith(b.lower()):
-            return {"Calextics":"CalExotics","Vive":"VIVE","Dreamtoys":"Dream Toys","Amorable":"Amorable by Rimba","ManCage":"Man Cage"}.get(b,b)
+            return {"Calextics":"CalExotics","Vive":"VIVE","Dreamtoys":"Dream Toys","Amorable":"Amorable by Rimba","ManCage":"Man Cage",
+             "Marc Dorcel":"Dorcel","Inmi":"XR Brands","Wand Essentials":"XR Brands","Clean Stream":"XR Brands","Genuine CB-3000":"CB-X",
+             "Rouge":"Rouge Garments","MM Original":"MM","ID Free":"ID Lubricants","ID Jelly":"ID Lubricants"}.get(b,b)
     return None
 
 def card(p):
@@ -369,6 +373,17 @@ ORDER_EMAIL = SETTINGS.get("email") or "sales@loveandbeautysales.co.uk"
 DELIVERY = SETTINGS.get("delivery") or "Free UK delivery, in plain, discreet packaging."
 SHOP_ORDER = ["lingerie","beauty","vibes","anal","rings","him","clubwear","menswear","bondage","lube","gifts"]
 
+def bslug(p):
+    b = brand_of(p["t"])
+    return re.sub(r"[^a-z0-9]+", "-", b.lower()).strip("-") if b else "other"
+
+def brand_counts(items):
+    c = {}
+    for p in items:
+        b = brand_of(p["t"])
+        if b: c[b] = c.get(b, 0) + 1
+    return c
+
 def site_price(p):
     if any(w in p["t"].lower() for w in NO_DISCOUNT): return p["p"]
     return round(p["p"] * (1 - DISCOUNT) + 1e-9, 2)
@@ -379,12 +394,12 @@ def shop_card(p, direct):
     if direct:
         sp = site_price(p); off = sp < p["p"]
         pr = (f'<span class="price gold">£{sp:.2f}</span>' + (f'<s class="was">£{p["p"]:.2f}</s>' if off else ''))
-        return (f'<article class="card" id="p{p["i"]}" data-id="{p["i"]}" data-price="{sp}" data-was="{p["p"]}" data-c="{p["c"]}" data-t="{e(p["t"].lower())}" data-title="{e(p["t"])}" data-img="{img}">'
+        return (f'<article class="card" id="p{p["i"]}" data-id="{p["i"]}" data-price="{sp}" data-was="{p["p"]}" data-c="{p["c"]}" data-b="{e(bslug(p))}" data-t="{e(p["t"].lower())}" data-title="{e(p["t"])}" data-img="{img}">'
                 f'<a class="img ws-open" href="#p{p["i"]}"><img src="{img}" alt="{e(p["t"])}" loading="lazy" width="500" height="500">'
                 + ('<span class="ws-badge">15% OFF</span>' if off else '') + '</a>'
                 f'<div class="body"><div class="cat">{e(SUBNAME[p["c"]])}</div><h4>{e(p["t"])}</h4>'
                 f'<div class="foot"><span class="ws-prices">{pr}</span><a class="btn btn-gold buy ws-open" href="#p{p["i"]}">Buy now</a></div></div></article>')
-    return (f'<article class="card" data-price="{p["p"]}" data-c="{p["c"]}" data-t="{e(p["t"].lower())}">'
+    return (f'<article class="card" data-price="{p["p"]}" data-c="{p["c"]}" data-b="{e(bslug(p))}" data-t="{e(p["t"].lower())}">'
             f'<a class="img" href="{ebay}" target="_blank" rel="noopener"><img src="{img}" alt="{e(p["t"])}" loading="lazy" width="500" height="500"></a>'
             f'<div class="body"><div class="cat">{e(SUBNAME[p["c"]])}</div><h4>{e(p["t"])}</h4>'
             f'<div class="foot"><span class="price gold">£{p["p"]:.2f}</span><a class="btn btn-gold buy" href="{ebay}" target="_blank" rel="noopener">Buy on eBay</a></div></div></article>')
@@ -400,16 +415,24 @@ SHOP_JS = """
   try{ if(localStorage.getItem('lb_age_ok')==='1') gate.hidden=true; }catch(e){}
   document.getElementById('gate-enter').addEventListener('click',function(){gate.hidden=true;try{localStorage.setItem('lb_age_ok','1');}catch(e){}});
   var $=function(id){return document.getElementById(id);};
-  var grid=$('grid'), cards=[].slice.call(grid.children), q=$('search'), s=$('sort'), cat=$('catsel');
+  var grid=$('grid'), cards=[].slice.call(grid.children), q=$('search'), s=$('sort'), cat=$('catsel'), br=$('brandsel');
+  var bchips=[].slice.call(document.querySelectorAll('#brands .chip[data-b]'));
   function apply(){
-    var t=(q.value||'').toLowerCase().trim(), c=cat.value, shown=0, list=cards.slice();
+    var t=(q.value||'').toLowerCase().trim(), c=cat.value, b=br?br.value:'', shown=0, list=cards.slice();
+    bchips.forEach(function(ch){ ch.setAttribute('aria-pressed', ch.dataset.b===b?'true':'false'); });
+    try{ var u=new URL(location.href); if(b) u.searchParams.set('brand',b); else u.searchParams.delete('brand'); history.replaceState(null,'',u.pathname+u.search+location.hash); }catch(e){}
     if(s.value==='low') list.sort(function(a,b){return a.dataset.price-b.dataset.price;});
     if(s.value==='high') list.sort(function(a,b){return b.dataset.price-a.dataset.price;});
-    list.forEach(function(el){ var ok=(!t||el.dataset.t.indexOf(t)>-1)&&(!c||el.dataset.c===c); el.hidden=!ok; if(ok) shown++; grid.appendChild(el); });
+    list.forEach(function(el){ var ok=(!t||el.dataset.t.indexOf(t)>-1)&&(!c||el.dataset.c===c)&&(!b||el.dataset.b===b); el.hidden=!ok; if(ok) shown++; grid.appendChild(el); });
     $('count').textContent=shown+(shown===1?' product':' products');
     $('empty').hidden=shown>0;
   }
   q.addEventListener('input',apply); s.addEventListener('change',apply); cat.addEventListener('change',apply);
+  if(br){
+    br.addEventListener('change',apply);
+    bchips.forEach(function(ch){ ch.addEventListener('click',function(){ br.value=(br.value===ch.dataset.b?'':ch.dataset.b); apply(); $('grid').scrollIntoView({behavior:'smooth',block:'start'}); }); });
+    try{ var pb=new URLSearchParams(location.search).get('brand'); if(pb&&br.querySelector('option[value="'+pb+'"]')){ br.value=pb; apply(); } }catch(e){}
+  }
   var modal=$('modal'); if(!modal) return;
   var PP=modal.dataset.paypal, EM=modal.dataset.email;
   function money(v){return '\\u00a3'+Number(v).toFixed(2);}
@@ -465,6 +488,17 @@ def build_shop(direct):
                        jsonld=f'<script type="application/ld+json">{jl}</script>')
     opts = '<option value="">All categories</option>' + "".join(
         f'<option value="{s}">{e(SUBNAME[s])} ({sum(1 for p in items if p["c"]==s)})</option>' for s in SHOP_ORDER if any(p["c"]==s for p in items))
+    bc = brand_counts(items)
+    bslugs = {b: re.sub(r"[^a-z0-9]+", "-", b.lower()).strip("-") for b in bc}
+    top = sorted(bc, key=lambda b: (-bc[b], b.lower()))[:14]
+    adult_brands = sorted({brand_of(p["t"]) for p in ADULT if brand_of(p["t"])} - set(bc), key=str.lower)
+    bopts = '<option value="">All brands</option>' + "".join(
+        f'<option value="{bslugs[b]}">{e(b)} ({bc[b]})</option>' for b in sorted(bc, key=str.lower))
+    brands_html = ('<div class="brand-bar" id="brands"><p class="eyebrow">Shop by brand</p><div class="chips brand-chips">'
+        + "".join(f'<button type="button" class="chip" aria-pressed="false" data-b="{bslugs[b]}">{e(b)} <b>{bc[b]}</b></button>' for b in top)
+        + '</div><p class="brand-more">More brands in the <b>All brands</b> menu below'
+        + (f' · {", ".join(e(b) for b in adult_brands)} are in our <a class="gold" href="{ADULT_PAGE}">adults-only section (18+)</a>' if adult_brands else '')
+        + '</p></div>')
     switch = ('<div class="chips static-chips">'
               f'<a class="chip" href="/shop/" aria-pressed="{"true" if direct else "false"}">Website Shop · 15% off</a>'
               f'<a class="chip" href="/ebay-shop/" aria-pressed="{"false" if direct else "true"}">eBay Shop</a></div>')
@@ -482,11 +516,13 @@ def build_shop(direct):
 <section class="shop cat-shop">
   <div class="wrap">
     {switch}
+    {brands_html}
     <div class="tools">
       <div><h2 class="gold cat-h2">{name}</h2><div class="count" id="count">{len(items)} products</div></div>
       <div class="tools-right">
         <input class="field-dark" id="search" type="search" placeholder="Search {len(items)} products…" aria-label="Search">
         <select class="field-dark" id="catsel" aria-label="Category">{opts}</select>
+        <select class="field-dark" id="brandsel" aria-label="Brand">{bopts}</select>
         <select class="field-dark" id="sort" aria-label="Sort"><option value="featured">Featured</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
       </div>
     </div>
