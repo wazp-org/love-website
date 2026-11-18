@@ -314,3 +314,12 @@ input:focus{border-color:var(--gold)!important}
 .toast{background:#1d1226;box-shadow:0 0 0 1px var(--gold),var(--sh)}
 .gate{background:#0d0812}
 .gate .b-gold{background:linear-gradient(180deg,#f0d690,#c99d4c);color:#1a0f08}
+/* main-site links: one row on desktop, a swipeable row under the search on phones */
+.hnav{gap:16px}
+@media(max-width:1100px){.hnav a:nth-child(1),.hnav a:nth-child(7){display:none}}
+@media(max-width:860px){
+  .hnav{display:flex;grid-column:1/-1;grid-row:3;overflow-x:auto;scrollbar-width:none;gap:18px;padding:2px 2px 4px;white-space:nowrap}
+  .hnav::-webkit-scrollbar{display:none}
+  .hnav a,.hnav a:nth-child(1),.hnav a:nth-child(7){display:inline;font-size:.68rem}
+  .bar{top:142px}
+}
