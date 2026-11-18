@@ -124,7 +124,7 @@ PAGE = f"""<!doctype html>
     <a class="logo" href="/" aria-label="Love and Beauty home"><img src="/images/logo-small.png" alt=""><span>LOVE AND BEAUTY</span></a>
     <form class="search" role="search" onsubmit="return false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.8 4.8-1.4 1.4-4.8-4.8A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"/></svg>
       <input id="q" type="search" placeholder="Search lingerie, LELO, vibrators…" aria-label="Search products" autocomplete="off"><button type="button" id="q-x" class="q-x" aria-label="Clear search" hidden>×</button></form>
-    <nav class="hnav" aria-label="Main"><a href="/">Home</a><a href="/lingerie/">Lingerie</a><a href="/beauty/">Beauty</a><a href="/sex-toys/">Wellness</a><a href="/home-parties/">Home Parties</a><a href="/#story">Our Story</a><a href="/ebay-shop/">eBay Shop</a></nav>
+    <nav class="hnav" aria-label="Main"><a href="/">Home</a><a href="/lingerie/">Lingerie</a><a href="/beauty/">Beauty</a><a href="/sex-toys/">Wellness</a><a href="/home-parties/">Home Parties</a><a href="/#story">Our Story</a><a class="nav-unseen" href="/unseen/">The Unseen</a></nav>
     <button class="bag-btn" id="bag-open" aria-label="Open basket"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7V6a5 5 0 0 1 10 0v1h3l-1.3 13.1A2 2 0 0 1 16.7 22H7.3a2 2 0 0 1-2-1.9L4 7h3Zm2 0h6V6a3 3 0 0 0-6 0v1Z"/></svg><span id="bag-n" class="bag-n" hidden>0</span></button>
   </div>
 </header>
@@ -231,3 +231,106 @@ PAGE = f"""<!doctype html>
 os.makedirs(os.path.join(ROOT, "shop"), exist_ok=True)
 open(os.path.join(ROOT, "shop", "index.html"), "w", encoding="utf-8").write(PAGE)
 print(f"/shop/  {n} products (new shop)")
+
+# ---------------------------------------------------------------------------
+# THE UNSEEN (/unseen/): the private, premium collection.
+# Rows: most wanted (eBay views + watchers), just arrived, LELO, luxury
+# pleasure, couture lingerie, the gift edit. Same basket and checkout as /shop/.
+# ---------------------------------------------------------------------------
+INT = {}
+ip = os.path.join(ROOT, "tools", "interest.json")
+if os.path.exists(ip): INT = {k: v for k, v in json.load(open(ip)).items() if not k.startswith("_")}
+STOCK = {}
+sp = os.path.join(ROOT, "tools", "stock.json")
+if os.path.exists(sp): STOCK = json.load(open(sp))      # eBay id -> quantity available
+NEWIDS = []
+npth = os.path.join(ROOT, "tools", "new_ids.json")
+if os.path.exists(npth): NEWIDS = json.load(open(npth))   # newest listings first
+byid = {x["i"]: x for x in items}
+lux_brand = re.compile(r"lelo|womanizer|we-vibe|le wand|kiiroo|je joue|svakom|ohmibod|inya|dorcel|electrastim|mystim|nexus|rocks-off|satisfyer pro|zalo", re.I)
+couture = re.compile(r"abierta fina|noir handmade|cottelli bondage|cottelli lingerie|leg avenue|amorable|black level", re.I)
+giftre = re.compile(r"advent calendar|gift set|gift box|pleasure set|couples kit|collection set|luxury", re.I)
+used = set()
+seen_t = set()
+def take(pool, n, key=None, uniq=True):
+    out = []; tt = set()
+    for x in (sorted(pool, key=key) if key else pool):
+        if uniq and x["i"] in used: continue
+        t = re.sub(r"\b(size|s|m|l|xl|xxl|[2-4]xl|s/m|m/l|l/xl)\b.*$", "", x["t"].lower())[:40]
+        if t in tt or (uniq and t in seen_t): continue
+        tt.add(t); seen_t.add(t)
+        out.append(x["i"]);
+        if uniq: used.add(x["i"])
+        if len(out) >= n: break
+    return out
+score = lambda x: -(INT.get(x["i"], [0, 0])[0] + 25 * INT.get(x["i"], [0, 0])[1])
+RAILS = {}
+RAILS["wanted"] = {"badge": "Most wanted", "ids": take([x for x in items if x["i"] in INT and x["p"] >= 15 and not x.get("o") and x["c"] not in ("lube", "beauty", "him")], 12, score)}
+RAILS["lelo"] = {"badge": "LELO", "ids": take([x for x in items if "lelo" in x["t"].lower() and not x.get("o")], 30, lambda x: -x["p"], uniq=False)}
+used.update(RAILS["lelo"]["ids"])
+RAILS["new"] = {"badge": "New in", "ids": take([byid[i] for i in NEWIDS if i in byid and byid[i]["p"] >= 18 and not byid[i].get("o") and byid[i]["c"] in ("lingerie", "vibes", "clubwear", "bondage", "gifts", "anal", "rings")], 14)}
+RAILS["lux"] = {"badge": "Luxury", "ids": take([x for x in items if (x["p"] >= 60 or (lux_brand.search(x["t"]) and x["p"] >= 40)) and not x.get("o") and x["c"] not in ("lube", "him", "gifts") and not giftre.search(x["t"])], 16, lambda x: -x["p"])}
+RAILS["couture"] = {"badge": "Couture", "ids": take([x for x in items if x["c"] in ("lingerie", "clubwear") and couture.search(x["t"]) and x["p"] >= 22 and not x.get("o")], 16, lambda x: (score(x), -x["p"]))}
+RAILS["gift"] = {"badge": "Gift idea", "ids": take([x for x in items if (x["c"] == "gifts" or giftre.search(x["t"])) and x["p"] >= 25 and not x.get("o")], 12, lambda x: -x["p"])}
+uids = set(i for r in RAILS.values() for i in r["ids"])
+UITEMS = []
+for x in items:
+    if x["i"] in uids:
+        y = dict(x)
+        q = STOCK.get(x["i"])
+        if q: y["q"] = int(q)
+        UITEMS.append(y)
+
+def rail(key, eyebrow, title, line):
+    return f"""<section class="u-sec" id="{key}">
+    <div class="u-head"><div><p class="eyebrow">{eyebrow}</p><h2>{title}</h2><p class="u-line">{line}</p></div>
+      <div class="u-arrows"><button type="button" data-scroll="{key}" data-dir="l" aria-label="Scroll left">‹</button><button type="button" data-scroll="{key}" data-dir="r" aria-label="Scroll right">›</button></div></div>
+    <div class="u-rail" data-rail="{key}"></div>
+  </section>"""
+
+UMAIN = f"""<main class="u-main">
+  <section class="u-hero">
+    <div class="u-glow" aria-hidden="true"></div>
+    <p class="eyebrow">Love and Beauty · Private collection</p>
+    <h1>THE UNSEEN</h1>
+    <div class="star">✦</div>
+    <p class="tag">The pieces everyone's eyeing, the newest arrivals and our most luxurious finds, gathered in one private room.</p>
+    <a class="b b-gold u-cta" href="#wanted">Step inside</a>
+    <nav class="u-jump" aria-label="In The Unseen"><a href="#wanted">Most wanted</a><a href="#new">Just arrived</a><a href="#lelo">LELO</a><a href="#lux">Luxury</a><a href="#couture">Couture lingerie</a><a href="#gift">The gift edit</a></nav>
+  </section>
+  {rail("wanted", "The ones everyone's watching", "Most Wanted", "Our most viewed and most watched pieces right now. When they're gone, they're gone.")}
+  {rail("new", "Fresh in the stock room", "Just Arrived", "The newest pieces to join the collection.")}
+  <section class="u-feature">
+    <div><p class="eyebrow">The house of LELO</p><h2>Swedish luxury, beautifully made</h2><p class="u-line">Body-safe silicone, whisper-quiet motors and a two-year LELO warranty. Every piece is genuine and sealed.</p><a class="b b-line" href="#lelo">Explore LELO</a></div>
+  </section>
+  {rail("lelo", "Genuine · Sealed · Sent discreetly", "The LELO Collection", "Every LELO piece we have in stock.")}
+  {rail("lux", "Indulge", "Luxury Pleasure", "Our most premium toys, from LELO, Womanizer, We-Vibe, Le Wand and more.")}
+  {rail("couture", "Dressed to be undressed", "Couture Lingerie", "Abierta Fina, Noir Handmade, Cottelli and Leg Avenue, in limited sizes.")}
+  {rail("gift", "For someone special", "The Gift Edit", "Show-stopping presents, sent in plain packaging so the surprise stays a surprise.")}
+  <section class="u-list">
+    <p class="eyebrow">Be first through the door</p>
+    <h2>Join The Unseen list</h2>
+    <p class="u-line">New arrivals land here before anywhere else. Send us a message and we'll let you know when something special comes in.</p>
+    <a class="b b-gold" href="mailto:{EMAIL}?subject=Add%20me%20to%20The%20Unseen%20list">Add me to the list</a>
+  </section>
+  <section class="trust">
+    <div><b>Free delivery</b><span>Evri Tracked, plain unbranded packaging</span></div>
+    <div><b>Next day £4.99</b><span>Order by noon, Mon–Fri</span></div>
+    <div><b>Genuine brands</b><span>Sealed, from official UK suppliers</span></div>
+    <div><b>Real people</b><span><a href="mailto:{EMAIL}">{EMAIL}</a></span></div>
+  </section>
+</main>"""
+
+U = PAGE
+U = re.sub(r"<title>.*?</title>", "<title>The Unseen | Private Collection | Love and Beauty</title>", U, flags=re.S)
+U = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="The Unseen: Love and Beauty\'s private collection. Most wanted pieces, new arrivals, LELO and luxury, sent discreetly.">', U)
+U = U.replace(f'<link rel="canonical" href="{SITE}/shop/">', f'<link rel="canonical" href="{SITE}/unseen/">')
+U = U.replace('<meta property="og:title" content="Shop Love and Beauty – 15% less than eBay">', '<meta property="og:title" content="The Unseen – Love and Beauty private collection">')
+U = re.sub(r"<main>.*?</main>", lambda m: UMAIN, U, flags=re.S)
+U = U.replace("<body>", '<body class="unseen">', 1)
+U = U.replace('<h2 id="gate-title">Are you 18 or over?</h2>\n    <p>Our shop includes adult products. Please confirm your age to continue.</p>',
+              '<p class="eyebrow">Private collection</p><h2 id="gate-title">The Unseen</h2>\n    <p>Behind this door are adult products. Please confirm you\'re 18 or over to step inside.</p>')
+U = U.replace(f"window.LB_ITEMS={DATA};", "window.LB_ITEMS=" + json.dumps(UITEMS, separators=(",", ":"), ensure_ascii=False) + ";window.LB_RAILS=" + json.dumps(RAILS, separators=(",", ":")) + ";")
+os.makedirs(os.path.join(ROOT, "unseen"), exist_ok=True)
+open(os.path.join(ROOT, "unseen", "index.html"), "w", encoding="utf-8").write(U)
+print("/unseen/  " + ", ".join(f"{k} {len(v['ids'])}" for k, v in RAILS.items()))
