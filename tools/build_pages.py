@@ -18,7 +18,7 @@ UPDATED = re.search(r'LB_UPDATED = "([^"]+)"', src).group(1)
 # Explicit items (male masturbators/strokers and all realistic toys & dildos) are kept off the
 # main site and only shown on the separate 18+ page /masturbators-and-dildos/.
 # The same rule is used in index.html (ADULT_RE) - keep the two in step.
-ADULT_RE = re.compile(r"masturbat|stroker|fleshlight|onahole|tenga|blowtech|pocket pal|aliens pie|streetgirl|launch", re.I)
+ADULT_RE = re.compile(r"masturbat|stroker|fleshlight|fleshjack|pocket pussy|bj blaster|men.s classic|onahole|tenga|blowtech|pocket pal|aliens pie|streetgirl|launch", re.I)
 def is_adult(p):
     return p["c"] == "realistic" or (p["c"] == "him" and bool(ADULT_RE.search(p["t"])))
 ALL_PRODUCTS = PRODUCTS
@@ -30,33 +30,33 @@ PAGES = [
   dict(slug="sex-toys", price_desc=True, subs=["vibes","anal","rings","him"], order=["vibes","vibes","vibes","rings","vibes","anal","vibes","him"], name="Sexual Wellness",
        title="Sex Toys & Sexual Wellness UK | Vibrators, Massagers & More | Love and Beauty",
        h1="SEXUAL WELLNESS",
-       desc="Shop {n} sexual wellness products and sex toys from LELO, Satisfyer, CalExotics, Rocks-Off and more: vibrators and massagers, anal play, couples rings and toys for him. Discreet UK delivery from Rotherham.",
+       desc="Shop {n} sexual wellness products and sex toys from LELO, Satisfyer, CalExotics, Rocks-Off and more: vibrators and massagers, anal play, couples rings and toys for him. Discreet UK delivery from Yorkshire.",
        intro=["Our sexual wellness collection: vibrators and massagers, anal play, cock rings and couples enhancers, and toys for him, from trusted brands including LELO, Satisfyer, CalExotics, Rocks-Off and ToyJoy.",
-              "Love and Beauty Limited is a family-run business in Rotherham, South Yorkshire. Every order is packed by hand and sent in plain, unbranded packaging, with secure checkout through our eBay shop."]),
+              "Love and Beauty Limited is a family-run business in Yorkshire. Every order is packed by hand and sent in plain, unbranded packaging, with secure checkout through our eBay shop."]),
   dict(slug="vibrators", subs=["vibes"], name="Vibrators & Massagers",
        title="Vibrators & Massagers UK | Rabbit, Wand & Clitoral Vibrators | Love and Beauty",
        h1="VIBRATORS & MASSAGERS",
        desc="Shop {n} vibrators and massagers: rabbit vibrators, wand massagers, clitoral suction toys, G-spot vibrators, bullets and love eggs from LELO, Satisfyer and more. Discreet UK delivery.",
        intro=["Rabbit vibrators, wand massagers, air-pulse clitoral stimulators, G-spot vibrators, bullets, finger vibes and remote-control love eggs, from LELO, Satisfyer, Le Wand, CalExotics, Rocks-Off, Love to Love and more.",
-              "Most are rechargeable, body-safe silicone and waterproof. All orders are sent discreetly from Rotherham, South Yorkshire."]),
+              "Most are rechargeable, body-safe silicone and waterproof. All orders are sent discreetly from Yorkshire."]),
   dict(slug="anal-toys", subs=["anal"], name="Anal Play",
        title="Anal Toys UK | Butt Plugs, Anal Beads & Prostate Massagers | Love and Beauty",
        h1="ANAL PLAY",
        desc="Shop {n} anal toys: butt plugs, anal beads, vibrating plugs, prostate massagers, anal training kits and douches from LELO, b-Vibe and more. Discreet UK delivery.",
        intro=["Butt plugs, anal beads, vibrating and remote-control plugs, prostate massagers, beginner training kits and douches from LELO, b-Vibe, Rocks-Off, CalExotics, Dorcel and more.",
-              "Beginner-friendly through to advanced, sent discreetly from Rotherham, South Yorkshire."]),
+              "Beginner-friendly through to advanced, sent discreetly from Yorkshire."]),
   dict(slug="cock-rings", subs=["rings"], name="Cock Rings & Enhancers",
        title="Cock Rings UK | Vibrating Cock Rings & Couples Enhancers | Love and Beauty",
        h1="COCK RINGS & ENHANCERS",
        desc="Shop {n} cock rings and enhancers: vibrating cock rings, couples rings, stretchy ring sets and ball stretchers from Hot Octopuss, CalExotics, Rocks-Off and more. Discreet UK delivery.",
        intro=["Vibrating cock rings, rechargeable couples enhancers, stretchy ring sets and ball stretchers from Hot Octopuss, CalExotics, Rocks-Off, ToyJoy and more.",
-              "Sent in plain packaging from our family-run business in Rotherham, South Yorkshire."]),
+              "Sent in plain packaging from our family-run business in Yorkshire."]),
   dict(slug="male-sex-toys", subs=["him"], name="Toys for Him",
        title="Toys for Him UK | Penis Pumps, Extenders & Chastity | Love and Beauty",
        h1="TOYS FOR HIM",
        desc="Shop {n} products for him: penis pumps, extenders, chastity devices and massagers from CalExotics, Pumped, MaleEdge and more. Discreet UK delivery.",
        intro=["Penis pumps, extenders, chastity devices and massagers for him from CalExotics, Pumped, MaleEdge, ManCage and more.",
-              "Every order is sent in plain, unbranded packaging from Rotherham, South Yorkshire."]),
+              "Every order is sent in plain, unbranded packaging from Yorkshire."]),
   dict(slug="lingerie", price_desc=True, subs=["lingerie","clubwear"], name="Lingerie", img="lingerie.jpg",
        filters=[("Bra Sets", r"\bbra\b|bralette"), ("Basques & Corsets", r"basque|corset|bustier"),
                 ("Bodies & Teddies", r"\bbody\b|bodysuit|teddy|catsuit"), ("Babydolls & Chemises", r"babydoll|chemise|slip\b|negligee"),
@@ -66,34 +66,34 @@ PAGES = [
        h1="LINGERIE",
        desc="Shop {n} lingerie and clubwear pieces: lace bra sets, basques and corsets, bodies, babydolls, stockings and suspenders, dresses and wet look clubwear from Cottelli, Leg Avenue, Abierta Fina, Noir Handmade and more, including plus sizes. UK delivery.",
        intro=["Silk, lace and quiet confidence. Lace bra and thong sets, basques and corsets, bodies and teddies, babydolls, stockings and suspender belts, plus dresses and wet look clubwear for a night out.",
-              "We stock Cottelli, Leg Avenue, Abierta Fina, Amorable by Rimba, Le Desir, Noir Handmade and Black Level, in sizes from S to 4XL. Every order is wrapped with care and sent discreetly from Rotherham, South Yorkshire."],
+              "We stock Cottelli, Leg Avenue, Abierta Fina, Amorable by Rimba, Le Desir, Noir Handmade and Black Level, in sizes from S to 4XL. Every order is wrapped with care and sent discreetly from Yorkshire."],
        extra=[("Sizes S to 4XL", "Most sets come in several sizes and many are available in plus sizes. If you're between sizes, email us and we'll help."),
               ("Gift-ready", "Buying for someone else? Every order is packed in plain, unbranded packaging, ready to give."),
-              ("Real stock, ready to send", "Everything you see is in our Rotherham stock room and dispatched quickly.")]),
+              ("Real stock, ready to send", "Everything you see is in our Yorkshire stock room and dispatched quickly.")]),
   dict(slug="bondage", subs=["bondage"], name="Bondage & Restraints",
        title="Bondage Gear UK | Cuffs, Collars, Floggers & Restraints | Love and Beauty",
        h1="BONDAGE & RESTRAINTS",
        desc="Shop {n} bondage items: leather cuffs, collars, floggers, gags, hoods, bed restraints and nipple clamps from Rimba, Rouge Garments, Ouch! and more. Discreet UK delivery.",
        intro=["Leather wrist and ankle cuffs, collars and leads, floggers, gags, hoods and masks, bed restraint systems and nipple clamps from Rimba, Rouge Garments, Ouch!, CalExotics and more.",
-              "Sent in plain packaging from our family-run business in Rotherham, South Yorkshire."]),
+              "Sent in plain packaging from our family-run business in Yorkshire."]),
   dict(slug="fetishwear", subs=["clubwear","menswear"], name="Fetish & Clubwear",
        title="Fetishwear & Clubwear UK | Wet Look, Vinyl, Latex & Men's Underwear | Love and Beauty",
        h1="FETISH & CLUBWEAR",
        desc="Shop {n} fetishwear and clubwear pieces: wet look and vinyl dresses, latex, catsuits, costumes, men's underwear and harnesses from Noir Handmade, Black Level, Svenjoyment and more.",
        intro=["Wet look and vinyl dresses, latex, catsuits and costumes, plus men's underwear, jockstraps and harnesses from Noir Handmade, Black Level, Rimba, Svenjoyment, NEK and more.",
-              "Sent discreetly from Rotherham, South Yorkshire."]),
+              "Sent discreetly from Yorkshire."]),
   dict(slug="lubricants", subs=["lube"], name="Lubes & Intimate Care",
        title="Lubricants & Intimate Care UK | Kegel Balls, Dilators & Toy Cleaner | Love and Beauty",
        h1="LUBRICANTS & INTIMATE CARE",
        desc="Shop {n} intimate care products: lubricant, kegel balls and pelvic floor trainers, dilator sets, menstrual cups and toy cleaner from LELO, CalExotics and more. Discreet UK delivery.",
        intro=["Lubricant, kegel balls and smart pelvic floor trainers, dilator sets, menstrual cups and toy cleaner from LELO, CalExotics, Satisfyer and more.",
-              "Self-care, softly spoken, and sent discreetly from Rotherham, South Yorkshire."]),
+              "Self-care, softly spoken, and sent discreetly from Yorkshire."]),
   dict(slug="gifts", subs=["gifts"], name="Gifts & Calendars",
        title="Adult Gifts & Advent Calendars UK | Couples Gift Sets | Love and Beauty",
        h1="GIFTS & ADVENT CALENDARS",
        desc="Shop {n} adult gifts: 2026 adult advent calendars with Womanizer and We-Vibe, couples gift sets and starter kits. Discreet UK delivery.",
        intro=["Adult advent calendars, couples gift sets, starter kits and novelty gifts, perfect for birthdays, anniversaries and Christmas.",
-              "Sent in plain packaging from Rotherham, South Yorkshire."]),
+              "Sent in plain packaging from Yorkshire."]),
   dict(slug="beauty", price_desc=True, subs=["beauty","lube"], name="Beauty & Self-Care", img="beauty.jpg",
        pick=r"lamai|beauty|face|skin|kegel|pelvic|dilator|menstrual|geisha|love balls|ben wa|luna",
        drop=r"vibrat|e-stim|electro|pleasure|thumping|motor|remote|krush",
@@ -217,7 +217,7 @@ FOOT = """
     <div class="name gold">LOVE AND BEAUTY LIMITED</div>
     <div class="star-rule"><svg><use href="#star"/></svg></div>
     <div class="flinks"><a href="/">Home</a><a href="/home-parties/">Home Parties</a><a href="/#story">Our Story</a><a href="/#find-us">Find Us</a><a href="/#contact">Contact</a><a href="/shop/">Website Shop</a><a href="/ebay-shop/">eBay Shop</a></div>
-    <p class="meta">Family-run in Rotherham, South Yorkshire · Discreet, plain packaging · Adult products are sold to over-18s only.<br>© {year} Love and Beauty Limited</p>
+    <p class="meta">Family-run in Yorkshire · Discreet, plain packaging · Adult products are sold to over-18s only.<br>© {year} Love and Beauty Limited</p>
   </div>
 </footer>
 <script>
@@ -473,7 +473,7 @@ def build_shop(direct):
         name, h1 = "Website Shop", "WEBSITE SHOP"
         title = "Shop Direct – 15% Off Every eBay Price | Love and Beauty"
         desc = f"Buy direct from Love and Beauty and save 15% on our eBay prices across {len(items)} lingerie, beauty and sexual wellness products. Pay by PayPal or order by email. Free discreet UK delivery."
-        intro = [f"Every product from our eBay shop, sold direct from our family-run business in Rotherham, South Yorkshire, and <b>15% cheaper than our eBay prices</b>.",
+        intro = [f"Every product from our eBay shop, sold direct from our family-run business in Yorkshire, and <b>15% cheaper than our eBay prices</b>.",
                  "Pay securely with PayPal, or send us an order by email and we'll reply with how to pay. " + e(DELIVERY)]
         note = f"Prices are 15% below our eBay prices (updated {e(UPDATED)}). Stock is shared with our eBay shop, so if an item has just sold out we'll let you know and refund you in full straight away. Adults 18+ only."
     else:
